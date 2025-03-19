@@ -1,64 +1,64 @@
 [project]
-name = "ir-datasets-clueweb22"
 authors = [
-    {name = "Jan Heinrich Merker", email = "heinrich.merker@uni-jena.de"},
+  {name = "Jüri Keller", email = "jueri.keller@th-koeln.de"},
 ]
-description = "Extension for accessing the ClueWeb22 via ir_datasets."
-readme = "README.md"
-requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Intended Audience :: Science/Research",
-    "Topic :: Scientific/Engineering",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "fastwarc>=0.14,<0.16",
-    "importlib-metadata>=7,<9",
-    "ir-datasets~=0.5.6",
-    "pyyaml~=6.0",
-    "typing-extensions~=4.11",
+  "fastwarc>=0.14,<0.16",
+  "importlib-metadata>=7,<9",
+  "ir-datasets~=0.5.6",
+  "pyyaml~=6.0",
+  "typing-extensions~=4.11",
 ]
+description = "Extension for accessing the LongEval test collections via ir_datasets."
 dynamic = ["version"]
+name = "ir-datasets-longeval"
+readme = "README.md"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
-tests =[
-    "bandit[toml]~=1.7",
-    "mypy~=1.5",
-    "pytest~=8.0",
-    "pytest-cov~=5.0",
-    "pytest-subtests>=0.12.1,<0.15.0",
-    "ruff>=0.5.0,<0.10",
-    "types-pyyaml~=6.0",
+tests = [
+  "bandit[toml]~=1.7",
+  "mypy~=1.5",
+  "pytest~=8.0",
+  "pytest-cov~=5.0",
+  "pytest-subtests>=0.12.1,<0.15.0",
+  "ruff>=0.5.0,<0.10",
+  "types-pyyaml~=6.0",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/janheinrichmerker/ir-datasets-clueweb22"
-"Bug Tracker" = "https://github.com/janheinrichmerker/ir-datasets-clueweb22/issues"
+"Bug Tracker" = "https://github.com/jueri/ir-datasets-longeval/issues"
+"Homepage" = "https://github.com/jueri/ir-datasets-longeval"
 
 [project.scripts]
-ir_datasets_clueweb22 = "ir_datasets_clueweb22:main_cli"
-ir-datasets-clueweb22 = "ir_datasets_clueweb22:main_cli"
-irds-clueweb22 = "ir_datasets_clueweb22:main_cli"
+ir-datasets-longeval = "ir_datasets_longeval:main_cli"
+ir_datasets_longeval = "ir_datasets_longeval:main_cli"
+irds-longeval = "ir_datasets_longeval:main_cli"
 
 [build-system]
-requires = [
-    "setuptools>=69,<76",
-    "setuptools-scm~=8.0",    
-]
 build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=69,<76",
+  "setuptools-scm~=8.0",
+]
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.packages.find]
 exclude = [
-    "build",
-    "venv",
+  "build",
+  "venv",
 ]
 
 [tool.setuptools.package-data]
@@ -68,21 +68,21 @@ mypkg = ["*.txt", "*.md", "*.rst"]
 
 [tool.ruff]
 exclude = [
-    "build",
-    "venv",
+  "build",
+  "venv",
 ]
 
 [tool.mypy]
 exclude = [
-    "build",
-    "venv",
+  "build",
+  "venv",
 ]
 ignore_missing_imports = true
 
 [tool.bandit]
 exclude_dirs = [
-    "build",
-    "venv",
+  "build",
+  "venv",
 ]
 
 [tool.bandit.assert_used]

@@ -1,0 +1,47 @@
+{
+  "longeval-web": {},
+  "longeval-web/2022-06": {
+    "docs": {
+      "count": 1000000,
+      "fields": {
+        "doc_id": {
+          "max_len": 29,
+          "common_prefix": "doc"
+        }
+      }
+    }
+  },
+  "longeval-web/2022-07": {
+    "docs": {
+      "count": 1000000,
+      "fields": {
+        "doc_id": {
+          "max_len": 29,
+          "common_prefix": "doc"
+        }
+      }
+    }
+  },
+  "longeval-web/2022-08": {
+    "docs": {
+      "count": 1000000,
+      "fields": {
+        "doc_id": {
+          "max_len": 29,
+          "common_prefix": "doc"
+        }
+      }
+    }
+  },
+  "longeval-sci/2024-11": {
+    "docs": {
+      "count": 1,
+      "fields": {
+        "doc_id": {
+          "max_len": 29
+        }
+      }
+    }
+  },
+  "longeval-sci/2024-11/train": {}
+}

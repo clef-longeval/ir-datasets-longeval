@@ -20,9 +20,10 @@ from ir_datasets.formats import BaseDocs
 from ir_datasets.indices import Docstore
 from ir_datasets.log import easy
 from ir_datasets.util import Download, apply_sub_slice, slice_idx, home_path
-from ir_datasets_clueweb22.io import OffsetIOWrapper
-from ir_datasets_clueweb22.util import DownloadConfig, YamlDocumentation
+from ir_datasets_longeval.io import OffsetIOWrapper
+from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
 
+_FormatReader = Callable[[IO[bytes]], Iterator[_Record]]
 
 # Logging.
 _logger = easy("clueweb22")
