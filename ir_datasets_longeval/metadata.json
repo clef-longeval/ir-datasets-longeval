@@ -172,5 +172,61 @@
         }
       }
     }
+  },
+  "longeval-web/2022-12": {
+    "qrels": {
+      "count": 139035,
+      "fields": {
+        "relevance": {
+          "counts_by_value": {
+            "0": 83995,
+            "1": 25733,
+            "2": 29307
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 2534242,
+      "fields": {
+        "text": {
+          "max_len": 11359
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
+        }
+      }
+    }
+  },
+  "longeval-web/2023-01": {
+    "qrels": {
+      "count": 133244,
+      "fields": {
+        "relevance": {
+          "counts_by_value": {
+            "0": 79217,
+            "1": 24909,
+            "2": 29118
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 2537565,
+      "fields": {
+        "text": {
+          "max_len": 11359
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
+        }
+      }
+    }
   }
 }
