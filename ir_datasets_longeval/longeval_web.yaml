@@ -2,10 +2,14 @@ _:
   pretty_name: "LongEval-Web"
   desc: "TBD"
   docs_instructions: "TBD"
-  data_access: "TBD"
+  data_access: |
+    TBD
+  bibtex_ids:
+  - fink25
+  - Galuscakova23
 
 2022-06:
-  desc: "TBD"
+  desc: "<p>Sub-collection from June 2022</p>"
   docs_instructions: "TBD"
 
 2022-07:

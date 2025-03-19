@@ -1,47 +1,176 @@
 {
-  "longeval-web": {},
+  "longeval-web": {
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
+    }
+  },
   "longeval-web/2022-06": {
-    "docs": {
-      "count": 1000000,
+    "qrels": {
+      "count": 85776,
       "fields": {
-        "doc_id": {
-          "max_len": 29,
-          "common_prefix": "doc"
+        "relevance": {
+          "counts_by_value": {
+            "0": 47837,
+            "1": 17608,
+            "2": 20331
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 1775681,
+      "fields": {
+        "text": {
+          "max_len": 11327
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
         }
       }
     }
   },
   "longeval-web/2022-07": {
-    "docs": {
-      "count": 1000000,
+    "qrels": {
+      "count": 107916,
       "fields": {
-        "doc_id": {
-          "max_len": 29,
-          "common_prefix": "doc"
+        "relevance": {
+          "counts_by_value": {
+            "0": 62354,
+            "1": 21592,
+            "2": 23970
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 1777616,
+      "fields": {
+        "text": {
+          "max_len": 11327
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
         }
       }
     }
   },
   "longeval-web/2022-08": {
-    "docs": {
-      "count": 1000000,
+    "qrels": {
+      "count": 133001,
       "fields": {
-        "doc_id": {
-          "max_len": 29,
-          "common_prefix": "doc"
+        "relevance": {
+          "counts_by_value": {
+            "0": 78330,
+            "1": 27297,
+            "2": 27374
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 1787018,
+      "fields": {
+        "text": {
+          "max_len": 11327
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
         }
       }
     }
   },
-  "longeval-sci/2024-11": {
-    "docs": {
-      "count": 1,
+  "longeval-web/2022-09": {
+    "qrels": {
+      "count": 135483,
       "fields": {
-        "doc_id": {
-          "max_len": 29
+        "relevance": {
+          "counts_by_value": {
+            "0": 78731,
+            "1": 27039,
+            "2": 29713
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 1210186,
+      "fields": {
+        "text": {
+          "max_len": 11327
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
         }
       }
     }
   },
-  "longeval-sci/2024-11/train": {}
+  "longeval-web/2022-10": {
+    "qrels": {
+      "count": 123967,
+      "fields": {
+        "relevance": {
+          "counts_by_value": {
+            "0": 73002,
+            "1": 24454,
+            "2": 26511
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 2418103,
+      "fields": {
+        "text": {
+          "max_len": 11435
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
+        }
+      }
+    }
+  },
+  "longeval-web/2022-11": {
+    "qrels": {
+      "count": 138031,
+      "fields": {
+        "relevance": {
+          "counts_by_value": {
+            "0": 82076,
+            "1": 26508,
+            "2": 29447
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 2433787,
+      "fields": {
+        "text": {
+          "max_len": 11435
+        },
+        "id": {
+          "max_len": 7
+        },
+        "url": {
+          "max_len": 511
+        }
+      }
+    }
+  }
 }

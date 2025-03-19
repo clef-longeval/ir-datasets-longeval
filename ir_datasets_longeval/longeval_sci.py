@@ -5,7 +5,6 @@ from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
 from ir_datasets.formats import JsonlDocs, TrecQrels, TsvQueries
 from ir_datasets.util import RelativePath, ZipExtractCache, home_path
-from ir_datasets.util.fileio import ZipExtractCache
 
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
 
@@ -27,7 +26,6 @@ MAPPING = (
         "arxivId": "arxivId",
         "pubmedId": "pubmedId",
         "magId": "magId",
-        "oaiIds": "oaiIds",
         "oaiIds": "oaiIds",
         "links": "links",
         "publishedDate": "publishedDate",

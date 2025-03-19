@@ -1,5 +1,6 @@
 [project]
 authors = [
+  {name = "Jan Heinrich Merker", email = "heinrich.merker@uni-jena.de"},
   {name = "Jüri Keller", email = "jueri.keller@th-koeln.de"},
 ]
 classifiers = [

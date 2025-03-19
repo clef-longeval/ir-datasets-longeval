@@ -1,27 +1,13 @@
-import io
 import json
-from os import PathLike
-from pathlib import Path
-from typing import List, NamedTuple, Tuple
+import sqlite3
+from typing import List, NamedTuple
 
 import ir_datasets
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
-from ir_datasets.formats import BaseDocs, TrecDocs, TrecQrels, TrecQueries, TsvQueries
+from ir_datasets.formats import TrecDocs, TrecQrels, TsvQueries
 from ir_datasets.indices import PickleLz4FullStore
-from ir_datasets.log import easy
-from ir_datasets.util import (
-    Cache,
-    Download,
-    IterStream,
-    LocalDownload,
-    RelativePath,
-    TarExtract,
-    TarExtractAll,
-    apply_sub_slice,
-    home_path,
-    slice_idx,
-)
+from ir_datasets.util import LocalDownload, RelativePath, ZipExtractCache, home_path
 
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
 
@@ -31,7 +17,7 @@ QREL_DEFS = {
     1: "relevant",
     0: "not relevant",
 }
-SUB_COLLECTIONS = [
+SUB_COLLECTIONS_TRAIN = [
     "2022-06",
     "2022-07",
     "2022-08",
@@ -43,8 +29,6 @@ SUB_COLLECTIONS = [
     "2023-02",
 ]
 DUA = "Please confirm you agree to the TREC data usage agreement found at " "<TBD>"
-
-import sqlite3
 
 
 class LongEvalMetadataItem(NamedTuple):
@@ -62,20 +46,20 @@ class LongEvalMetadata:
     @property
     def metadata(self):
         if self._metadata is None:
-            connection = sqlite3.connect(self._dlc.path())
-            cursor = connection.cursor()
-            cursor.execute("SELECT id, url, last_updated_at, date FROM mapping")
-            rows = cursor.fetchall()
-            self._metadata = {
-                str(row[0]): LongEvalMetadataItem(
-                    str(row[0]),
-                    row[1],
-                    json.loads(row[2]) if isinstance(row[2], str) else row[2],
-                    json.loads(row[3]) if isinstance(row[3], str) else row[3],
-                )
-                for row in rows
-            }
-            connection.close()
+            print("Loading metadata")
+            with sqlite3.connect(self._dlc.path()) as connection:
+                cursor = connection.cursor()
+                cursor.execute("SELECT id, url, last_updated_at, date FROM mapping")
+                rows = cursor.fetchall()
+                self._metadata = {
+                    str(row[0]): LongEvalMetadataItem(
+                        str(row[0]),
+                        row[1],
+                        json.loads(row[2]) if isinstance(row[2], str) else row[2],
+                        json.loads(row[3]) if isinstance(row[3], str) else row[3],
+                    )
+                    for row in rows
+                }
         return self._metadata
 
     def get_metadata(self, id):
@@ -97,7 +81,6 @@ class LongEvalDocs(TrecDocs):
     def __init__(self, dlc, meta):
         self._dlc = LocalDownload(dlc.path())
         self._meta = meta
-        # self._dlc = dlc
         super().__init__(self._dlc)
 
     @ir_datasets.util.use_docstore
@@ -128,28 +111,51 @@ class LongEvalDocs(TrecDocs):
         return LongEvalDocument
 
 
-def register(sub_collection: List[str] = SUB_COLLECTIONS):
-    if "longeval" in registry:
+def register():
+    if "longeval-web" in registry:
         # Already registered.
         return
     documentation = YamlDocumentation("longeval-web.yaml")
     base_path = home_path() / NAME
-    print(base_path)
     dlc = DownloadConfig.context(NAME, base_path)
 
     base = Dataset(documentation("_"))
 
-    queries = TsvQueries(dlc["queries"], lang="fr")
+    training_2025_data_cache = ZipExtractCache(
+        dlc["longeval_2025_train_collection"], base_path / "release_2025_p1"
+    )
 
-    meta = LongEvalMetadata(RelativePath(dlc["meta"], "collection_db.db"))
+    queries = TsvQueries(
+        RelativePath(
+            training_2025_data_cache,
+            "release_2025_p1/French/queries.txt",
+        ),
+        lang="fr",
+    )
+
+    meta = LongEvalMetadata(
+        RelativePath(
+            training_2025_data_cache,
+            "release_2025_p1/French/collection_db.db",
+        )
+    )
 
     subsets = {}
-    for sub_collection in SUB_COLLECTIONS:
+    for sub_collection in SUB_COLLECTIONS_TRAIN:
         subsets[sub_collection] = Dataset(
-            LongEvalDocs(RelativePath(dlc["docs"], f"{sub_collection}_fr"), meta),
+            LongEvalDocs(
+                RelativePath(
+                    training_2025_data_cache,
+                    f"release_2025_p1/French/LongEval Train Collection/Trec/{sub_collection}_fr",
+                ),
+                meta,
+            ),
             queries,
             TrecQrels(
-                RelativePath(dlc["qrels"], f"{sub_collection}_fr/qrels_processed.txt"),
+                RelativePath(
+                    training_2025_data_cache,
+                    f"release_2025_p1/French/LongEval Train Collection/qrels/{sub_collection}_fr/qrels_processed.txt",
+                ),
                 QREL_DEFS,
             ),
         )
