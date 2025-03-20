@@ -21,30 +21,36 @@ pip install ir-datasets-longeval
 
 ## Usage
 
-Using this extension is simple. Just register the additional datasets by calling `register()`. Then you can load the datasets with [ir_datasets](https://ir-datasets.com/python.html) as usual:
+The `ir_datasets_longeval` extension provides an `load` method that returns a LongEval `ir_dataset` that allows to load official versions of the LongEval datasets as well as modified versions that you have on your local filesystem:
 
 ```python
-from ir_datasets import load
-from ir_datasets_longeval import register
+from ir_datasets_longeval import load
 
-# Register the longeval datasets.
-register()
-# Use ir_datasets as usual.
+# load an official version of the LongEval dataset.
 dataset = load("longeval-web/2022-06")
+
+# load a local copy of a LongEval dataset.
+# E.g., so that you can easily run your approach on modified data.
+dataset = load("<PATH-TO-A-DIRECTORY-ON-YOUR-MACHINE>")
+
+# From now on, you can use dataset as any ir_dataset
 ```
 
-You can also register only the `longeval-web` or `longeval-sci` dataset:
+LongEval datasets have a set of temporal specifics that you can use:
 
 ```Python
-from ir_datasets import load
-from ir_datasets_longeval import register
+# At what time does/did a dataset take place?
+dataset.get_timestamp()
 
-# Register the longeval datasets.
-register("longeval-web")
+# Each dataset can have a list of zero or more past datasets/interactions.
+# You can incorporate them in your retrieval system:
+for past_dataset in dataset.get_past_datasets():
+    # `past_dataset` is an LongEval `ir_dataset` with the same functionality as the `dataset`
+    past_dataset.get_timestamp()
 ```
 
 
-If you want to use the [CLI](https://ir-datasets.com/cli.html), just use the `ir_datasets_longeval` instead of `ir_datasets`. All CLI commands will work as usual, e.g., to list the available datasets:
+If you want to use the [CLI](https://ir-datasets.com/cli.html), just use the `ir_datasets_longeval` instead of `ir_datasets`. All CLI commands will work as usual, e.g., to list the officially available datasets:
 
 ```shell
 ir_datasets_longeval list
