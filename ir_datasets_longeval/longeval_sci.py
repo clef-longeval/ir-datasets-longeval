@@ -70,7 +70,7 @@ class LongEvalSciDataset(Dataset):
         self.base_path = base_path
 
         if not base_path or not base_path.exists() or not base_path.is_dir():
-            raise ValueError('foo')
+            raise ValueError(f'I expected that the directory {base_path} exists. But the directory does not exist.')
 
         if not timestamp:
             timestamp = self.read_property_from_metadata("timestamp")
@@ -84,11 +84,11 @@ class LongEvalSciDataset(Dataset):
 
         docs_path = base_path / 'documents'
         if not docs_path.exists() or not docs_path.is_dir():
-            raise ValueError('foo')
+            raise ValueError(f'I expected that the directory {docs_path} exists. But the directory does not exist.')
         
         jsonl_doc_files = os.listdir(docs_path)
         if len(jsonl_doc_files) == 0:
-            raise ValueError('foo')
+            raise ValueError(f'The directory {docs_path} has no jsonl files. This is likely an arror.')
 
         docs = JsonlDocs(
             [ExtractedPath(base_path/ "documents" / split) for split in jsonl_doc_files],
@@ -99,7 +99,7 @@ class LongEvalSciDataset(Dataset):
 
         queries_path = base_path / 'queries.txt'
         if not queries_path.exists() or not queries_path.is_file():
-            raise ValueError('foo')
+            raise ValueError(f'I expected that the file {queries_path} exists. But the directory does not exist.')
 
         queries = TsvQueries(ExtractedPath(queries_path))
         qrels = None
