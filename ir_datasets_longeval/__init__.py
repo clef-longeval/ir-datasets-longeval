@@ -1,9 +1,12 @@
-from ir_datasets import main_cli as irds_main_cli, registry as irds_registry
-
-from ir_datasets_longeval.longeval_sci import register as register_longeval_sci, LongEvalSciDataset
-from ir_datasets_longeval.longeval_web import register as register_longeval_web
-from typing import Union
 from pathlib import Path
+from typing import Union
+
+from ir_datasets import main_cli as irds_main_cli
+from ir_datasets import registry as irds_registry
+
+from ir_datasets_longeval.longeval_sci import LongEvalSciDataset
+from ir_datasets_longeval.longeval_sci import register as register_longeval_sci
+from ir_datasets_longeval.longeval_web import register as register_longeval_web
 
 
 def load(longeval_ir_dataset: Union[str, Path]):
@@ -13,18 +16,26 @@ def load(longeval_ir_dataset: Union[str, Path]):
         longeval_ir_dataset (Union[str, Path]): the ID of an LongEval ir_dataset or a local path.
     """
     if longeval_ir_dataset is None:
-        raise ValueError('Please pass either a string or a Path.')
+        raise ValueError("Please pass either a string or a Path.")
 
     if longeval_ir_dataset.startswith("longeval-sci"):
         register_longeval_sci()
     if longeval_ir_dataset.startswith("longeval-web"):
         register_longeval_web()
 
-    exists_locally = longeval_ir_dataset and Path(longeval_ir_dataset).exists() and Path(longeval_ir_dataset).is_dir()
-    exists_in_irds = longeval_ir_dataset in irds_registry and irds_registry[longeval_ir_dataset]
+    exists_locally = (
+        longeval_ir_dataset
+        and Path(longeval_ir_dataset).exists()
+        and Path(longeval_ir_dataset).is_dir()
+    )
+    exists_in_irds = (
+        longeval_ir_dataset in irds_registry and irds_registry[longeval_ir_dataset]
+    )
 
     if exists_locally and exists_in_irds:
-        raise ValueError(f'The passed {longeval_ir_dataset} is ambiguous, as it is a valid official ir_datasets id and a local directory.')
+        raise ValueError(
+            f"The passed {longeval_ir_dataset} is ambiguous, as it is a valid official ir_datasets id and a local directory."
+        )
 
     if exists_locally:
         return LongEvalSciDataset(Path(longeval_ir_dataset))
@@ -32,7 +43,10 @@ def load(longeval_ir_dataset: Union[str, Path]):
     if exists_in_irds:
         return irds_registry[longeval_ir_dataset]
 
-    raise ValueError('I could not find a dataset with the id '+ str(longeval_ir_dataset))
+    raise ValueError(
+        "I could not find a dataset with the id " + str(longeval_ir_dataset)
+    )
+
 
 def register(dataset=None) -> None:
     if dataset:

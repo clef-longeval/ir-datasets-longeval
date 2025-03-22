@@ -74,11 +74,10 @@ class LongEvalSciDataset(Dataset):
         prior_datasets: Optional[List[str]] = None,
     ):
         documentation = YamlDocumentation(yaml_documentation)
-        base_path = base_path / "longeval_sci_training_2025_abstract"
         self.base_path = base_path
 
         if not base_path or not base_path.exists() or not base_path.is_dir():
-            raise ValueError(
+            raise FileNotFoundError(
                 f"I expected that the directory {base_path} exists. But the directory does not exist."
             )
 
@@ -93,8 +92,9 @@ class LongEvalSciDataset(Dataset):
         self.prior_datasets = prior_datasets
 
         docs_path = base_path / "documents"
+
         if not docs_path.exists() or not docs_path.is_dir():
-            raise ValueError(
+            raise FileNotFoundError(
                 f"I expected that the directory {docs_path} exists. But the directory does not exist."
             )
 
@@ -116,7 +116,7 @@ class LongEvalSciDataset(Dataset):
 
         queries_path = base_path / "queries.txt"
         if not queries_path.exists() or not queries_path.is_file():
-            raise ValueError(
+            raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
             )
 
@@ -149,9 +149,12 @@ def register():
     dlc = DownloadConfig.context(NAME, base_path)
     base_path = home_path() / NAME
 
-    data_path = ZipExtractCache(
-        dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
-    ).path()
+    data_path = (
+        ZipExtractCache(
+            dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
+        ).path()
+        / "longeval_sci_training_2025_abstract"
+    )
 
     subsets = {}
 
