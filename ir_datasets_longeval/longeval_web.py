@@ -139,6 +139,7 @@ class LongEvalWebDataset(Dataset):
     ):
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
+        self.meta = meta
 
         if not base_path or not base_path.exists() or not base_path.is_dir():
             raise FileNotFoundError(
@@ -178,7 +179,15 @@ class LongEvalWebDataset(Dataset):
         return self.timestamp
 
     def get_past_datasets(self):
-        return [LongEvalWebDataset(self.base_path / i) for i in self.prior_datasets]
+        return [
+            LongEvalWebDataset(
+                base_path=self.base_path,
+                meta=self.meta,
+                timestamp=i,
+                prior_datasets=self.prior_datasets[: self.prior_datasets.index(i)],
+            )
+            for i in self.prior_datasets
+        ]
 
     def read_property_from_metadata(self, property):
         return json.load(open(self.base_path / "metadata.json", "r"))[property]
