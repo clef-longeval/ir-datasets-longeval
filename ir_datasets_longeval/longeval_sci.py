@@ -104,11 +104,11 @@ class LongEvalSciDataset(Dataset):
                 f"The directory {docs_path} has no jsonl files. This is likely an arror."
             )
 
+        docs_paths = [
+            ExtractedPath(base_path / "documents" / split) for split in jsonl_doc_files
+        ]
         docs = JsonlDocs(
-            [
-                ExtractedPath(base_path / "documents" / split)
-                for split in jsonl_doc_files
-            ],
+            docs_paths,
             doc_cls=LongEvalSciDoc,
             docstore_path=f"{docs_path}/docstore.pklz4",
             mapping=MAPPING,
@@ -121,9 +121,9 @@ class LongEvalSciDataset(Dataset):
             )
 
         queries = TsvQueries(ExtractedPath(queries_path))
+
         qrels = None
         qrels_path = base_path / "qrels.txt"
-
         if qrels_path.exists() and qrels_path.is_file():
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 

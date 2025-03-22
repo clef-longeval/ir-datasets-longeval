@@ -1,6 +1,9 @@
+import contextlib
 import json
 import sqlite3
-from typing import List, NamedTuple
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, NamedTuple, Optional
 
 import ir_datasets
 from ir_datasets import registry
@@ -38,7 +41,7 @@ class LongEvalMetadataItem(NamedTuple):
     date: List[str]
 
 
-class LongEvalMetadata:
+class LongEvalWebMetadata:
     def __init__(self, dlc):
         self._dlc = dlc
         self._metadata = None
@@ -46,8 +49,7 @@ class LongEvalMetadata:
     @property
     def metadata(self):
         if self._metadata is None:
-            print("Loading metadata")
-            with sqlite3.connect(self._dlc.path()) as connection:
+            with sqlite3.connect(self._dlc) as connection:
                 cursor = connection.cursor()
                 cursor.execute("SELECT id, url, last_updated_at, date FROM mapping")
                 rows = cursor.fetchall()
@@ -79,7 +81,7 @@ class LongEvalDocument(NamedTuple):
 
 class LongEvalDocs(TrecDocs):
     def __init__(self, dlc, meta):
-        self._dlc = LocalDownload(dlc.path())
+        self._dlc = dlc
         self._meta = meta
         super().__init__(self._dlc)
 
@@ -100,7 +102,7 @@ class LongEvalDocs(TrecDocs):
 
     def docs_store(self):
         return PickleLz4FullStore(
-            path=f"{self._dlc.path(force=False)}.pklz4",
+            path=f"{self._dlc.path()}/docstore.pklz4",
             init_iter_fn=self.docs_iter,
             data_cls=self.docs_cls(),
             lookup_field="doc_id",
@@ -111,55 +113,107 @@ class LongEvalDocs(TrecDocs):
         return LongEvalDocument
 
 
-def register():
-    if "longeval-web" in registry:
-        # Already registered.
-        return
-    documentation = YamlDocumentation("longeval-web.yaml")
-    base_path = home_path() / NAME
-    dlc = DownloadConfig.context(NAME, base_path)
+class ExtractedPath:
+    def __init__(self, path):
+        self._path = path
 
-    base = Dataset(documentation("_"))
+    def path(self, force=True):
+        if force and not self._path.exists():
+            raise FileNotFoundError(self._path)
+        return self._path
 
-    training_2025_data_cache = ZipExtractCache(
-        dlc["longeval_2025_train_collection"], base_path / "release_2025_p1"
-    )
+    @contextlib.contextmanager
+    def stream(self):
+        with open(self._path, "rb") as f:
+            yield f
 
-    queries = TsvQueries(
-        RelativePath(
-            training_2025_data_cache,
-            "release_2025_p1/French/queries.txt",
-        ),
-        lang="fr",
-    )
 
-    meta = LongEvalMetadata(
-        RelativePath(
-            training_2025_data_cache,
-            "release_2025_p1/French/collection_db.db",
+class LongEvalWebDataset(Dataset):
+    def __init__(
+        self,
+        base_path: Path,
+        meta: LongEvalWebMetadata,
+        yaml_documentation: str = "longeval_web.yaml",
+        timestamp: Optional[str] = None,
+        prior_datasets: Optional[List[str]] = None,
+    ):
+        documentation = YamlDocumentation(yaml_documentation)
+        self.base_path = base_path
+
+        if not base_path or not base_path.exists() or not base_path.is_dir():
+            raise FileNotFoundError(
+                f"I expected that the directory {base_path} exists. But the directory does not exist."
+            )
+        if not timestamp:
+            timestamp = self.read_property_from_metadata("timestamp")
+
+        self.timestamp = datetime.strptime(timestamp, "%Y-%m")
+
+        if prior_datasets is None:
+            prior_datasets = self.read_property_from_metadata("prior-datasets")
+
+        self.prior_datasets = prior_datasets
+
+        docs_path = base_path / f"French/LongEval Train Collection/Trec/{timestamp}_fr"
+        docs = LongEvalDocs(ExtractedPath(docs_path), meta)
+
+        queries_path = base_path / "French/queries.txt"
+        if not queries_path.exists() or not queries_path.is_file():
+            raise FileNotFoundError(
+                f"I expected that the file {queries_path} exists. But the directory does not exist."
+            )
+        queries = TsvQueries(ExtractedPath(queries_path), lang="fr")
+
+        qrels = None
+        qrels_path = (
+            base_path
+            / f"French/LongEval Train Collection/qrels/{timestamp}_fr/qrels_processed.txt"
         )
+        if qrels_path.exists() and qrels_path.is_file():
+            qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
+
+        super().__init__(docs, queries, qrels, documentation)
+
+    def get_timestamp(self):
+        return self.timestamp
+
+    def get_past_datasets(self):
+        return [LongEvalWebDataset(self.base_path / i) for i in self.prior_datasets]
+
+    def read_property_from_metadata(self, property):
+        return json.load(open(self.base_path / "metadata.json", "r"))[property]
+
+
+def register():
+    base_path = home_path() / NAME
+
+    dlc = DownloadConfig.context(NAME, base_path)
+    base_path = home_path() / NAME
+
+    data_path = (
+        ZipExtractCache(
+            dlc["longeval_2025_train_collection"], base_path / "release_2025_p1"
+        ).path()
+        / "release_2025_p1"
     )
+
+    meta = LongEvalWebMetadata(data_path / "French/collection_db.db")
 
     subsets = {}
-    for sub_collection in SUB_COLLECTIONS_TRAIN:
-        subsets[sub_collection] = Dataset(
-            LongEvalDocs(
-                RelativePath(
-                    training_2025_data_cache,
-                    f"release_2025_p1/French/LongEval Train Collection/Trec/{sub_collection}_fr",
-                ),
-                meta,
-            ),
-            queries,
-            TrecQrels(
-                RelativePath(
-                    training_2025_data_cache,
-                    f"release_2025_p1/French/LongEval Train Collection/qrels/{sub_collection}_fr/qrels_processed.txt",
-                ),
-                QREL_DEFS,
-            ),
+
+    for timestamp in SUB_COLLECTIONS_TRAIN:
+        if f"{NAME}/{timestamp}" in registry:
+            # Already registered.
+            continue
+        subsets[timestamp] = LongEvalWebDataset(
+            base_path=data_path,
+            meta=meta,
+            yaml_documentation="longeval_web.yaml",
+            timestamp=timestamp,
+            prior_datasets=SUB_COLLECTIONS_TRAIN[
+                : SUB_COLLECTIONS_TRAIN.index(timestamp)
+            ],
         )
 
-    registry.register(NAME, base)
     for s in sorted(subsets):
         registry.register(f"{NAME}/{s}", subsets[s])
