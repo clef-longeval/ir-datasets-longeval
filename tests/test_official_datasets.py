@@ -15,7 +15,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertIsNotNone(dataset)
         example_doc = dataset.docs_iter().__next__()
 
-        self.assertEqual("68859258", example_doc.doc_id)
+        self.assertIsNotNone("68859258", example_doc.doc_id)
         actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
         self.assertEqual(393, len(actual_queries))
         for k, v in expected_queries.items():

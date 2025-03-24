@@ -1,26 +1,37 @@
 from pathlib import Path
 from typing import Union
+import os
 
 from ir_datasets import main_cli as irds_main_cli
 from ir_datasets import registry as irds_registry
 
 from ir_datasets_longeval.longeval_sci import LongEvalSciDataset
-from ir_datasets_longeval.longeval_sci import register as register_longeval_sci
+from ir_datasets_longeval.longeval_sci import register as register_longeval_sci, register_spot_check_datasets
 from ir_datasets_longeval.longeval_web import register as register_longeval_web
 
 
 def load(longeval_ir_dataset: Union[str, Path]):
-    """Load an LongEval ir_dataset. Can point to an official ID of an LongEval dataset or a local directory of the same structure.
+    """Load an LongEval ir_dataset.
+    Can point to an official ID of an LongEval dataset or a local directory of the same structure.
+
+    If this method is called within the TIRA sandbox (no internet is available),
+    it loads the data from the directory that TIRA mounted into the container as input dataset as specified via the TIRA_INPUT_DATASET variable.
 
     Args:
         longeval_ir_dataset (Union[str, Path]): the ID of an LongEval ir_dataset or a local path.
     """
+    if __is_in_tira_sandbox():
+        # we do not have access to the internet in the TIRA sandbox
+        return LongEvalSciDataset(Path(os.environ["TIRA_INPUT_DATASET"]))
+
     if longeval_ir_dataset is None:
         raise ValueError("Please pass either a string or a Path.")
 
-    if longeval_ir_dataset.startswith("longeval-sci"):
+    if longeval_ir_dataset.startswith("longeval-sci/spot-check"):
+        register_spot_check_datasets()
+    elif longeval_ir_dataset.startswith("longeval-sci"):
         register_longeval_sci()
-    if longeval_ir_dataset.startswith("longeval-web"):
+    elif longeval_ir_dataset.startswith("longeval-web"):
         register_longeval_web()
 
     exists_locally = (
@@ -48,7 +59,14 @@ def load(longeval_ir_dataset: Union[str, Path]):
     )
 
 
+def __is_in_tira_sandbox():
+    return "TIRA_INPUT_DATASET" in os.environ
+
 def register(dataset=None) -> None:
+    if __is_in_tira_sandbox():
+        # we do not have access to the internet in the TIRA sandbox
+        return
+
     if dataset:
         dataset = dataset.split("/")[0]
     if dataset == "longeval-sci":
