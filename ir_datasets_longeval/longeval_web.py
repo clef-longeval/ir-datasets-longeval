@@ -1,11 +1,14 @@
 import contextlib
 import json
+import os
+import pickle
 import sqlite3
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, NamedTuple, Optional
 
 import ir_datasets
+import lz4.frame
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
 from ir_datasets.formats import TrecDocs, TrecQrels, TsvQueries
@@ -13,6 +16,8 @@ from ir_datasets.indices import PickleLz4FullStore
 from ir_datasets.util import LocalDownload, RelativePath, ZipExtractCache, home_path
 
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
+
+logger = ir_datasets.log.easy()
 
 NAME = "longeval-web"
 QREL_DEFS = {
@@ -42,26 +47,46 @@ class LongEvalMetadataItem(NamedTuple):
 
 
 class LongEvalWebMetadata:
-    def __init__(self, dlc):
+    def __init__(self, dlc, cache_file=None):
         self._dlc = dlc
+        self._cache_file = cache_file or f"{self._dlc}/metadata.pklz4"
         self._metadata = None
 
     @property
     def metadata(self):
         if self._metadata is None:
-            with sqlite3.connect(self._dlc) as connection:
-                cursor = connection.cursor()
-                cursor.execute("SELECT id, url, last_updated_at, date FROM mapping")
-                rows = cursor.fetchall()
-                self._metadata = {
-                    str(row[0]): LongEvalMetadataItem(
-                        str(row[0]),
-                        row[1],
-                        json.loads(row[2]) if isinstance(row[2], str) else row[2],
-                        json.loads(row[3]) if isinstance(row[3], str) else row[3],
-                    )
-                    for row in rows
-                }
+            if os.path.exists(self._cache_file):
+                try:
+                    with lz4.frame.open(self._cache_file, "rb") as f:
+                        self._metadata = pickle.load(f)
+                    logger.info(f"Loaded metadata from cache file {self._cache_file}")
+
+                except Exception as e:
+                    logger.warn(f"Failed to load cache file {self._cache_file}: {e}")
+                    self._metadata = None
+
+            if self._metadata is None:
+                with sqlite3.connect(self._dlc / "collection_db.db") as connection:
+                    cursor = connection.cursor()
+                    cursor.execute("SELECT id, url, last_updated_at, date FROM mapping")
+                    rows = cursor.fetchall()
+                    self._metadata = {
+                        str(row[0]): LongEvalMetadataItem(
+                            str(row[0]),
+                            row[1],
+                            json.loads(row[2]) if isinstance(row[2], str) else row[2],
+                            json.loads(row[3]) if isinstance(row[3], str) else row[3],
+                        )
+                        for row in rows
+                    }
+
+                try:
+                    with lz4.frame.open(self._cache_file, "wb") as f:
+                        pickle.dump(self._metadata, f)
+
+                except Exception as e:
+                    logger.warn(f"Failed to save cache file {self._cache_file}: {e}")
+
         return self._metadata
 
     def get_metadata(self, id):
@@ -206,7 +231,7 @@ def register():
         / "release_2025_p1"
     )
 
-    meta = LongEvalWebMetadata(data_path / "French/collection_db.db")
+    meta = LongEvalWebMetadata(data_path / "French")
 
     subsets = {}
 
