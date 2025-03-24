@@ -125,6 +125,20 @@ class LongEvalDocs(TrecDocs):
 
                 yield LongEvalDocument(docid, url, last_updated_at, date, text)
 
+    # Bug:
+    # Document parts in the sub-collection 2023-02 have
+    # the wrong file extension jsonl.gz instead of trec.
+    # This causes the parser to fail. To fix this, the
+    # the docs_iter method is overridden and no extensions
+    # are checked.
+    def _docs_iter(self, path):
+        if Path(path).is_file():
+            with open(path, "rb") as f:
+                yield from self._parser(f)
+        elif Path(path).is_dir():
+            for child in path.iterdir():
+                yield from self._docs_iter(child)
+
     def docs_store(self):
         return PickleLz4FullStore(
             path=f"{self._dlc.path()}/docstore.pklz4",
