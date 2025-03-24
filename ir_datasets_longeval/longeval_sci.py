@@ -9,6 +9,7 @@ from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
 from ir_datasets.formats import JsonlDocs, TrecQrels, TsvQueries
 from ir_datasets.util import ZipExtractCache, home_path
+from shutil import copyfile
 
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
 
@@ -138,6 +139,31 @@ class LongEvalSciDataset(Dataset):
     def read_property_from_metadata(self, property):
         return json.load(open(self.base_path / "metadata.json", "r"))[property]
 
+
+def register_spot_check_datasets():
+    if f"{NAME}/spot-check" in registry:
+        return
+
+    base_path = home_path() / NAME / "spot-check"
+    dlc = DownloadConfig.context(NAME, base_path)
+    def extract_from_tira(name):
+            return ZipExtractCache(
+            dlc[name], base_path / name
+        ).path() / name.replace('-inputs', '').replace('-truths', '')
+
+    no_prior_data_inputs = extract_from_tira("sci-spot-check-no-prior-data-20250322-training-inputs")
+    with_prior_data_inputs = extract_from_tira("sci-spot-check-with-prior-data-20250322-training-inputs")
+    no_prior_data_truths = extract_from_tira("sci-spot-check-no-prior-data-20250322-training-truths")
+    with_prior_data_truths = extract_from_tira("sci-spot-check-with-prior-data-20250322-training-truths")
+
+    if not (no_prior_data_inputs / 'qrels.txt').exists():
+        copyfile(no_prior_data_truths / 'qrels.txt', no_prior_data_inputs / 'qrels.txt')
+
+    if not (with_prior_data_inputs / 'qrels.txt').exists():
+        copyfile(with_prior_data_truths / 'qrels.txt', with_prior_data_inputs / 'qrels.txt')
+
+    registry.register(f"{NAME}/spot-check", LongEvalSciDataset(no_prior_data_inputs))
+    registry.register(f"{NAME}/spot-check-with-prior-data", LongEvalSciDataset(with_prior_data_inputs))
 
 def register():
     if f"{NAME}/2024-11/train" in registry:
