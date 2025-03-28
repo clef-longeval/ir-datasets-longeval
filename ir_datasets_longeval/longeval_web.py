@@ -105,7 +105,7 @@ class LongEvalDocument(NamedTuple):
 
 
 class LongEvalDocs(TrecDocs):
-    def __init__(self, dlc, meta):
+    def __init__(self, dlc, meta=None):
         self._dlc = dlc
         self._meta = meta
         super().__init__(self._dlc)
@@ -117,11 +117,16 @@ class LongEvalDocs(TrecDocs):
                 yield doc
             else:
                 docid = doc.doc_id.strip("doc")
-                metadata = self._meta.get_metadata(docid)
-                url = metadata.url
-                last_updated_at = metadata.last_updated_at
-                date = metadata.date
                 text = doc.text
+                if self._meta:
+                    metadata = self._meta.get_metadata(docid)
+                    url = metadata.url
+                    last_updated_at = metadata.last_updated_at
+                    date = metadata.date
+                else:
+                    url = ""
+                    last_updated_at = []
+                    date = []
 
                 yield LongEvalDocument(docid, url, last_updated_at, date, text)
 
@@ -171,7 +176,7 @@ class LongEvalWebDataset(Dataset):
     def __init__(
         self,
         base_path: Path,
-        meta: LongEvalWebMetadata,
+        meta: Optional[LongEvalWebMetadata] = None,
         yaml_documentation: str = "longeval_web.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
@@ -222,7 +227,6 @@ class LongEvalWebDataset(Dataset):
             LongEvalWebDataset(
                 base_path=self.base_path,
                 meta=self.meta,
-                timestamp=i,
                 prior_datasets=self.prior_datasets[: self.prior_datasets.index(i)],
             )
             for i in self.prior_datasets

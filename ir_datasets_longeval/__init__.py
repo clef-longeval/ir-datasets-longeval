@@ -1,13 +1,24 @@
+import json
+import os
 from pathlib import Path
 from typing import Union
-import os
 
 from ir_datasets import main_cli as irds_main_cli
 from ir_datasets import registry as irds_registry
 
 from ir_datasets_longeval.longeval_sci import LongEvalSciDataset
-from ir_datasets_longeval.longeval_sci import register as register_longeval_sci, register_spot_check_datasets
+from ir_datasets_longeval.longeval_sci import register as register_longeval_sci
+from ir_datasets_longeval.longeval_sci import (
+    register_spot_check_datasets as register_spot_check_datasets_sci,
+)
+from ir_datasets_longeval.longeval_web import LongEvalWebDataset
 from ir_datasets_longeval.longeval_web import register as register_longeval_web
+
+
+def read_property_from_metadata(base_path, property):
+    base = json.load(open(Path(base_path) / "metadata.json", "r")).get(property, "")
+    print(base)
+    return base
 
 
 def load(longeval_ir_dataset: Union[str, Path]):
@@ -28,7 +39,7 @@ def load(longeval_ir_dataset: Union[str, Path]):
         raise ValueError("Please pass either a string or a Path.")
 
     if longeval_ir_dataset.startswith("longeval-sci/spot-check"):
-        register_spot_check_datasets()
+        register_spot_check_datasets_sci()
     elif longeval_ir_dataset.startswith("longeval-sci"):
         register_longeval_sci()
     elif longeval_ir_dataset.startswith("longeval-web"):
@@ -49,6 +60,10 @@ def load(longeval_ir_dataset: Union[str, Path]):
         )
 
     if exists_locally:
+        base = read_property_from_metadata(longeval_ir_dataset, "base")
+
+        if base.startswith("longeval-web"):
+            return LongEvalWebDataset(Path(longeval_ir_dataset))
         return LongEvalSciDataset(Path(longeval_ir_dataset))
 
     if exists_in_irds:
@@ -61,6 +76,7 @@ def load(longeval_ir_dataset: Union[str, Path]):
 
 def __is_in_tira_sandbox():
     return "TIRA_INPUT_DATASET" in os.environ
+
 
 def register(dataset=None) -> None:
     if __is_in_tira_sandbox():
