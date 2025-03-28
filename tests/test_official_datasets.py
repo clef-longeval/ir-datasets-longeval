@@ -17,7 +17,7 @@ class TestOfficialDatasets(unittest.TestCase):
         example_doc = dataset.docs_iter().__next__()
 
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("127164364", example_doc.doc_id)
+        self.assertEqual("68859258", example_doc.doc_id)
         actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
         self.assertEqual(393, len(actual_queries))
         for k, v in expected_queries.items():
@@ -27,7 +27,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(2024, dataset.get_timestamp().year)
         self.assertEqual([], dataset.get_past_datasets())
         docs_store = dataset.docs_store()
-        self.assertEqual("127164364", docs_store.get("127164364").doc_id)
+        self.assertEqual("68859258", docs_store.get("68859258").doc_id)
 
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")
@@ -37,7 +37,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertIsNotNone(dataset)
         example_doc = dataset.docs_iter().__next__()
 
-        self.assertEqual("938880", example_doc.doc_id)
+        self.assertEqual("44971", example_doc.doc_id)
 
         actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
         self.assertEqual(75427, len(actual_queries))
@@ -48,4 +48,4 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(2022, dataset.get_timestamp().year)
         self.assertEqual([], dataset.get_past_datasets())
         docs_store = dataset.docs_store()
-        self.assertEqual("938880", docs_store.get("938880").doc_id)
+        self.assertEqual("44971", docs_store.get("44971").doc_id)
