@@ -228,6 +228,7 @@ class LongEvalWebDataset(Dataset):
                 base_path=self.base_path,
                 meta=self.meta,
                 prior_datasets=self.prior_datasets[: self.prior_datasets.index(i)],
+                timestamp=i,
             )
             for i in self.prior_datasets
         ]

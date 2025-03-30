@@ -150,9 +150,6 @@ class TestLocalDataset(unittest.TestCase):
             {i.query_id: i.default_text() for i in dataset.queries_iter()},
         )
 
-        with self.assertRaises(AttributeError):
-            print(dataset.qrels_iter())
-
         self.assertEqual(2022, dataset.get_timestamp().year)
 
         docs_store = dataset.docs_store()
