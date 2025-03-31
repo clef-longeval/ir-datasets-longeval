@@ -225,10 +225,7 @@ class LongEvalWebDataset(Dataset):
     def get_past_datasets(self):
         return [
             LongEvalWebDataset(
-                base_path=self.base_path,
-                meta=self.meta,
-                prior_datasets=self.prior_datasets[: self.prior_datasets.index(i)],
-                timestamp=i,
+                base_path=self.base_path / i,
             )
             for i in self.prior_datasets
         ]
