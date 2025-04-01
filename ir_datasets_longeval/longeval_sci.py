@@ -53,7 +53,10 @@ class LongEvalSciDoc(NamedTuple):
     updatedDate: str
 
     def default_text(self):
-        return self.title + " " + self.abstract
+        ret = self.title
+        if self.abstract:
+            ret += " " + self.abstract
+        return ret
 
 
 class ExtractedPath:
