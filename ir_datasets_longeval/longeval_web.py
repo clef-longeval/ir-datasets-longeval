@@ -180,6 +180,7 @@ class LongEvalWebDataset(Dataset):
         yaml_documentation: str = "longeval_web.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
+        lag: Optional[str] = None
     ):
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -193,6 +194,13 @@ class LongEvalWebDataset(Dataset):
             timestamp = self.read_property_from_metadata("timestamp")
 
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
+
+        if not lag:
+            try:
+                lag = self.read_property_from_metadata("lag")
+            except KeyError:
+                lag = None
+        self.lag = lag
 
         if prior_datasets is None:
             prior_datasets = self.read_property_from_metadata("prior-datasets")
@@ -221,6 +229,13 @@ class LongEvalWebDataset(Dataset):
 
     def get_timestamp(self):
         return self.timestamp
+
+    def get_lag(self):
+        return self.lag
+
+
+    def get_lags(self):
+        return None
 
     def get_past_datasets(self):
         return [

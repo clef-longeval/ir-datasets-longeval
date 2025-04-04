@@ -53,7 +53,10 @@ class LongEvalSciDoc(NamedTuple):
     updatedDate: str
 
     def default_text(self):
-        return self.title + " " + self.abstract
+        ret = self.title
+        if self.abstract:
+            ret += " " + self.abstract
+        return ret
 
 
 class ExtractedPath:
@@ -73,6 +76,7 @@ class LongEvalSciDataset(Dataset):
         yaml_documentation: str = "longeval_sci.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
+        lag: Optional[str] = None,
     ):
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -86,6 +90,14 @@ class LongEvalSciDataset(Dataset):
             timestamp = self.read_property_from_metadata("timestamp")
 
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
+
+
+        if not lag:
+            try:
+                lag = self.read_property_from_metadata("lag")
+            except KeyError:
+                lag = None
+        self.lag = lag
 
         if prior_datasets is None:
             prior_datasets = self.read_property_from_metadata("prior-datasets")
@@ -133,6 +145,12 @@ class LongEvalSciDataset(Dataset):
     def get_timestamp(self):
         return self.timestamp
 
+    def get_lag(self):
+        return self.lag
+    
+    def get_lags(self):
+        return None
+
     def get_past_datasets(self):
         return [LongEvalSciDataset(self.base_path / i) for i in self.prior_datasets]
 
@@ -140,8 +158,16 @@ class LongEvalSciDataset(Dataset):
         return json.load(open(self.base_path / "metadata.json", "r"))[property]
 
 
+class MetaDataset(Dataset):
+    def __init__(self, datasets):
+        super().__init__()
+        self._datasets = datasets
+
+    def get_lags(self):
+        return self._datasets
+
 def register_spot_check_datasets():
-    if f"{NAME}/spot-check" in registry:
+    if f"{NAME}/spot-check/no-prior-data" in registry:
         return
 
     base_path = home_path() / NAME / "spot-check"
@@ -162,8 +188,11 @@ def register_spot_check_datasets():
     if not (with_prior_data_inputs / 'qrels.txt').exists():
         copyfile(with_prior_data_truths / 'qrels.txt', with_prior_data_inputs / 'qrels.txt')
 
-    registry.register(f"{NAME}/spot-check", LongEvalSciDataset(no_prior_data_inputs))
-    registry.register(f"{NAME}/spot-check-with-prior-data", LongEvalSciDataset(with_prior_data_inputs))
+    no_prior = LongEvalSciDataset(no_prior_data_inputs, lag="lag-3")
+    prior_data = LongEvalSciDataset(with_prior_data_inputs, lag="lag-4")
+    registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
+    registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
+    registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
 
 def register():
     if f"{NAME}/2024-11/train" in registry:
