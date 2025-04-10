@@ -11,6 +11,13 @@
 
 Extension for accessing the [LongEval](https://clef-longeval.github.io/) datasets via [ir_datasets](https://ir-datasets.com/).
 
+## 🚧 Under Construction
+This project is currently under development. pip install is not yet available.
+To install the latest version, please use:
+```shell
+pip install git+https://github.com/jueri/ir-datasets-longeval.git
+```
+
 ## Installation
 
 Install the package from PyPI:
