@@ -131,10 +131,6 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     needs:
     - python-build
-    - python-check
-    - python-typing
-    - python-security
-    - python-test
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -153,10 +149,6 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
     needs:
     - python-build
-    - python-check
-    - python-typing
-    - python-security
-    - python-test
     permissions:
       contents: write
     runs-on: ubuntu-latest
