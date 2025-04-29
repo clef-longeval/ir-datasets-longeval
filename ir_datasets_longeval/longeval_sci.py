@@ -216,17 +216,37 @@ def register():
     dlc = DownloadConfig.context(NAME, base_path)
     base_path = home_path() / NAME
 
+
+    subsets = {}
+
+    # 2025 train
     data_path = (
         ZipExtractCache(
             dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
         ).path()
         / "longeval_sci_training_2025_abstract"
     )
-
-    subsets = {}
-
+    
     subsets["2024-11/train"] = LongEvalSciDataset(
-        data_path, "2024-11/train", "2024-11", []
+        base_path=data_path,
+        timestamp="2024-11",
+        prior_datasets=[],
+    )
+
+    
+    # 2025 test
+    data_path = (
+        ZipExtractCache(
+            dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
+        ).path()
+        / "longeval_sci_training_2025_abstract"
+    )
+    subsets["2024-11"] = LongEvalSciDataset(
+        base_path=data_path, timestamp="2024-11", prior_datasets=[]
+    )
+
+    subsets["2025-01"] = LongEvalSciDataset(
+        base_path=data_path, timestamp="2025-01", prior_datasets=[subsets["2024-11"]]
     )
 
     for s in sorted(subsets):

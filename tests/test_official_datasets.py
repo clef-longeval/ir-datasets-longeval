@@ -1,4 +1,7 @@
+import json
 import unittest
+
+import pytest
 
 from ir_datasets_longeval import load
 
@@ -59,23 +62,22 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Qrels
         self.assertEqual(85776, len(list(dataset.qrels_iter())))
-        
+
         # Docs
         self.assertEqual("938880", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
         self.assertEqual("44971", docs_store.get("44971").doc_id)
-        
+
         # Timestamp
         self.assertEqual(2022, dataset.get_timestamp().year)
 
         # Prior datasets
         self.assertEqual([], dataset.get_past_datasets())
-        
+
         # Lag
         self.assertEqual("lag-0", dataset.get_lag())
-
 
     def test_all_sci_datasets(self):
         dataset_id = "longeval-sci/*"
@@ -91,7 +93,6 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(1, len(lags))
         self.assertEqual("lag-0", lags[0].get_lag())
 
-
     def test_all_web_datasets(self):
         dataset_id = "longeval-web/*"
         meta_dataset = load(dataset_id)
@@ -105,3 +106,56 @@ class TestOfficialDatasets(unittest.TestCase):
         lags = meta_dataset.get_lags()
         self.assertEqual(9, len(lags))
         self.assertEqual("lag-0", lags[0].get_lag())
+
+
+with open("ir_datasets_longeval/metadata.json") as f:
+    SPECS = json.load(f)
+
+
+class TestOfficialDatasets2(unittest.TestCase):
+    def test_all_official_datasets(self):
+        previous_lags = []
+        for dataset_name, spec in SPECS.items():
+            with self.subTest(dataset=dataset_name):
+                dataset = load(dataset_name)
+
+                # Dataset
+                self.assertIsNotNone(dataset)
+                example_doc = dataset.docs_iter().__next__()
+
+                # Queries
+                if queries := spec.get("queries"):
+                    actual_queries = {
+                        i.query_id: i.default_text() for i in dataset.queries_iter()
+                    }
+                    self.assertEqual(queries["count"], len(actual_queries))
+
+                # Qrels
+                if qrels := spec.get("qrels"):
+                    self.assertEqual(qrels["count"], len(list(dataset.qrels_iter())))
+
+                # Docs
+                if docs := spec.get("docs"):
+                    num_docs = dataset.docs_count()
+                    self.assertEqual(docs["count"], num_docs)
+
+                    # Docstore
+                    docstore = dataset.docs_store()
+                    example_doc = dataset.docs_iter().__next__().doc_id
+                    self.assertEqual(example_doc, docstore.get(example_doc).doc_id)
+
+                # # Timestamp
+                # self.assertEqual(2024, dataset.get_timestamp().year)
+
+                # Lag
+                if lag := spec.get("lag"):
+                    # # previous lags
+                    # self.assertEqual(len(previous_lags), dataset.get_lags())
+
+                    self.assertEqual(lag, dataset.get_lag())
+                    previous_lags.append(lag)
+
+                    # Prior datasets
+                    self.assertEqual(
+                        len(previous_lags), len(dataset.get_past_datasets())
+                    )
