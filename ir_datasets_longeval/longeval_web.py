@@ -182,7 +182,7 @@ class LongEvalWebDataset(Dataset):
         yaml_documentation: str = "longeval_web.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
-        lag: Optional[str] = None,
+        snapshot: Optional[str] = None,
     ):
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -198,12 +198,12 @@ class LongEvalWebDataset(Dataset):
 
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
 
-        if not lag:
+        if not snapshot:
             try:
-                lag = self.read_property_from_metadata("lag")
+                snapshot = self.read_property_from_metadata("snapshot")
             except KeyError:
-                lag = None
-        self.lag = lag
+                snapshot = None
+        self.snapshot = snapshot
 
         if prior_datasets is None:
             prior_datasets = self.read_property_from_metadata("prior-datasets")
@@ -233,13 +233,13 @@ class LongEvalWebDataset(Dataset):
     def get_timestamp(self):
         return self.timestamp
 
-    def get_lag(self):
-        return self.lag
+    def get_snapshot(self):
+        return self.snapshot
 
-    def get_lags(self):
+    def get_prior_snapshots(self):
         return None
 
-    def get_past_datasets(self):
+    def get_prior_datasets(self):
         return [
             LongEvalWebDataset(
                 base_path=self.base_path / i,
@@ -287,6 +287,7 @@ def register():
             prior_datasets=SUB_COLLECTIONS_TRAIN[
                 : SUB_COLLECTIONS_TRAIN.index(timestamp)
             ],
+            snapshot=SUB_COLLECTIONS_TRAIN.index(timestamp)+1,
         )
 
     for s in sorted(subsets):
