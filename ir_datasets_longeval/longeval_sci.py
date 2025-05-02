@@ -217,6 +217,7 @@ def register_spot_check_datasets():
 
     no_prior = LongEvalSciDataset(no_prior_data_inputs, snapshot="2024-10")
     prior_data = LongEvalSciDataset(with_prior_data_inputs, snapshot="2024-11")
+
     registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
     registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
     registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
