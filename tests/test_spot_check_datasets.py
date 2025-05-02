@@ -74,8 +74,8 @@ class TestSpotCheckDatasets(unittest.TestCase):
 
         datasets = meta_dataset.get_datasets()
         self.assertEqual(2, len(datasets))
-        self.assertEqual("s1", datasets[0].get_snapshot())
-        self.assertEqual("s3", datasets[1].get_snapshot())
+        self.assertEqual("2024-10", datasets[0].get_snapshot())
+        self.assertEqual("2024-11", datasets[1].get_snapshot())
 
         for dataset in datasets:
             dataset.get_prior_datasets()
