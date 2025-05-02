@@ -1,15 +1,15 @@
 {
   "longeval-sci/2024-11/train": {
-    "lag": "lag-0"
+    "snapshot": "2024-11-train"
   },
-  "longeval-web": {
-    "queries": {
-      "count": 75427,
-      "max_len": 5425
-    }
+  "longeval-sci/2024-11": {
+    "snapshot": "2024-11"
+  },
+  "longeval-sci/2025-01": {
+    "snapshot": "2025-01"
   },
   "longeval-web/2022-06": {
-    "lag": "lag-0",
+    "snapshot": "2022-06",
     "qrels": {
       "count": 85776,
       "fields": {
@@ -35,10 +35,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-07": {
-    "lag": "lag-1",
+    "snapshot": "2022-07",
     "qrels": {
       "count": 107916,
       "fields": {
@@ -64,10 +68,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-08": {
-    "lag": "lag-2",
+    "snapshot": "2022-08",
     "qrels": {
       "count": 133001,
       "fields": {
@@ -93,10 +101,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-09": {
-    "lag": "lag-3",
+    "snapshot": "2022-09",
     "qrels": {
       "count": 135483,
       "fields": {
@@ -122,10 +134,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-10": {
-    "lag": "lag-4",
+    "snapshot": "2022-10",
     "qrels": {
       "count": 123967,
       "fields": {
@@ -151,10 +167,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-11": {
-    "lag": "lag-5",
+    "snapshot": "2022-11",
     "qrels": {
       "count": 138031,
       "fields": {
@@ -180,10 +200,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2022-12": {
-    "lag": "lag-6",
+    "snapshot": "2022-12",
     "qrels": {
       "count": 139035,
       "fields": {
@@ -209,10 +233,14 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2023-01": {
-    "lag": "lag-7",
+    "snapshot": "2023-01",
     "qrels": {
       "count": 133244,
       "fields": {
@@ -238,9 +266,32 @@
           "max_len": 511
         }
       }
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
     }
   },
   "longeval-web/2023-02": {
-    "lag": "lag-8"
+    "snapshot": "2023-02",
+    "qrels": {
+      "count": 55718,
+      "fields": {
+        "relevance": {
+          "counts_by_value": {
+            "0": 79217,
+            "1": 24909,
+            "2": 29118
+          }
+        }
+      }
+    },
+    "docs": {
+      "count": 2526382
+    },
+    "queries": {
+      "count": 75427,
+      "max_len": 5425
+    }
   }
 }

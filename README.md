@@ -51,7 +51,7 @@ dataset.get_timestamp()
 
 # Each dataset can have a list of zero or more past datasets/interactions.
 # You can incorporate them in your retrieval system:
-for past_dataset in dataset.get_past_datasets():
+for past_dataset in dataset.get_prior_datasets():
     # `past_dataset` is an LongEval `ir_dataset` with the same functionality as the `dataset`
     past_dataset.get_timestamp()
 ```

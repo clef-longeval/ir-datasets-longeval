@@ -4,13 +4,10 @@ from ir_datasets_longeval import load
 
 
 class TestOfficialDatasets(unittest.TestCase):
-    def test_sci_dataset(self):
+    def test_longeval_sci_2024_11_train(self):
         dataset = load("longeval-sci/2024-11/train")
 
         expected_queries = {"ce5bfacf-8652-4bc1-a5b0-6144a917fb1c": "streptomyces"}
-        expected_qrels = [
-            {"doc_id": "140120179", "query_id": "1234-1234-1234-1234-1234", "rel": 2}
-        ]
 
         # Dataset
         self.assertIsNotNone(dataset)
@@ -37,10 +34,11 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(2024, dataset.get_timestamp().year)
 
         # Prior datasets
-        self.assertEqual([], dataset.get_past_datasets())
+        self.assertEqual([], dataset.get_prior_datasets())
 
         # Lag
-        self.assertEqual("lag-0", dataset.get_lag())
+        self.assertEqual('2024-11-train', dataset.get_snapshot())
+        dataset.qrels_path()
 
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")
@@ -59,23 +57,22 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Qrels
         self.assertEqual(85776, len(list(dataset.qrels_iter())))
-        
+
         # Docs
         self.assertEqual("938880", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
         self.assertEqual("44971", docs_store.get("44971").doc_id)
-        
+
         # Timestamp
         self.assertEqual(2022, dataset.get_timestamp().year)
 
         # Prior datasets
-        self.assertEqual([], dataset.get_past_datasets())
-        
-        # Lag
-        self.assertEqual("lag-0", dataset.get_lag())
+        self.assertEqual([], dataset.get_prior_datasets())
 
+        # Lag
+        self.assertEqual('2022-06', dataset.get_snapshot())
 
     def test_all_sci_datasets(self):
         dataset_id = "longeval-sci/*"
@@ -87,10 +84,9 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_lags()
+        lags = meta_dataset.get_datasets()
         self.assertEqual(1, len(lags))
-        self.assertEqual("lag-0", lags[0].get_lag())
-
+        self.assertEqual('2024-11-train', lags[0].get_snapshot())
 
     def test_all_web_datasets(self):
         dataset_id = "longeval-web/*"
@@ -102,6 +98,6 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_lags()
+        lags = meta_dataset.get_datasets()
         self.assertEqual(9, len(lags))
-        self.assertEqual("lag-0", lags[0].get_lag())
+        self.assertEqual("2022-06", lags[0].get_snapshot())

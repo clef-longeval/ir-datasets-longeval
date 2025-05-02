@@ -65,6 +65,11 @@ class ExtractedPath:
     def __init__(self, path):
         self._path = path
 
+    def path(self, force=True):
+        if force and not self._path.exists():
+            raise FileNotFoundError(self._path)
+        return self._path
+
     @contextlib.contextmanager
     def stream(self):
         with open(self._path, "rb") as f:
@@ -78,8 +83,17 @@ class LongEvalSciDataset(Dataset):
         yaml_documentation: str = "longeval_sci.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
-        lag: Optional[str] = None,
+        snapshot: Optional[str] = None,
     ):
+        """LongEvalSciDataset class
+
+        Args:
+            base_path (Path): Base path to the root of a typical longeval sci dataset directory structure.
+            yaml_documentation (str, optional): Documentation file. Defaults to "longeval_sci.yaml".
+            timestamp (Optional[str], optional): Timestamp in the YYYY-MM format of the snapshot. Defaults to None.
+            prior_datasets (Optional[List[str]], optional): List of all snapshot that come before this snapshot. Defaults to None.
+            snapshot (Optional[str], optional): Name of the sub-collection. This was previously also referred to as lag and is most likely similar to the dataset_id. Defaults to None.
+        """
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
 
@@ -91,15 +105,17 @@ class LongEvalSciDataset(Dataset):
         if not timestamp:
             timestamp = self.read_property_from_metadata("timestamp")
 
+        if timestamp is None:
+            raise ValueError("Timestamp cannot be None.")
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
 
-        if not lag:
+        if not snapshot:
             try:
-                print("read lag from metadata")
-                lag = self.read_property_from_metadata("lag")
+                print("read snapshot from metadata")
+                snapshot = self.read_property_from_metadata("snapshot")
             except KeyError:
-                lag = None
-        self.lag = lag
+                snapshot = None
+        self.snapshot = snapshot
 
         if prior_datasets is None:
             prior_datasets = self.read_property_from_metadata("prior-datasets")
@@ -147,13 +163,13 @@ class LongEvalSciDataset(Dataset):
     def get_timestamp(self):
         return self.timestamp
 
-    def get_lag(self):
-        return self.lag
+    def get_snapshot(self):
+        return self.snapshot
 
-    def get_lags(self):
+    def get_datasets(self):
         return None
 
-    def get_past_datasets(self):
+    def get_prior_datasets(self):
         return [LongEvalSciDataset(self.base_path / i) for i in self.prior_datasets]
 
     def read_property_from_metadata(self, property):
@@ -199,8 +215,9 @@ def register_spot_check_datasets():
             with_prior_data_truths / "qrels.txt", with_prior_data_inputs / "qrels.txt"
         )
 
-    no_prior = LongEvalSciDataset(no_prior_data_inputs, lag="2024-10")
-    prior_data = LongEvalSciDataset(with_prior_data_inputs, lag="2024-11")
+    no_prior = LongEvalSciDataset(no_prior_data_inputs, snapshot="2024-10")
+    prior_data = LongEvalSciDataset(with_prior_data_inputs, snapshot="2024-11")
+
     registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
     registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
     registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
@@ -216,6 +233,9 @@ def register():
     dlc = DownloadConfig.context(NAME, base_path)
     base_path = home_path() / NAME
 
+    subsets = {}
+
+    # 2025 train
     data_path = (
         ZipExtractCache(
             dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
@@ -223,10 +243,11 @@ def register():
         / "longeval_sci_training_2025_abstract"
     )
 
-    subsets = {}
-
     subsets["2024-11/train"] = LongEvalSciDataset(
-        data_path, "2024-11/train", "2024-11", []
+        base_path=data_path,
+        timestamp="2024-11",
+        prior_datasets=[],
+        snapshot="2024-11-train",
     )
 
     for s in sorted(subsets):
