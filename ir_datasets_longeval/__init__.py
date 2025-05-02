@@ -20,7 +20,7 @@ def read_property_from_metadata(base_path, property):
     return base
 
 
-def load(longeval_ir_dataset: Union[str, Path]):
+def load(longeval_ir_dataset: Union[str]):
     """Load an LongEval ir_dataset.
     Can point to an official ID of an LongEval dataset or a local directory of the same structure.
 
@@ -28,7 +28,7 @@ def load(longeval_ir_dataset: Union[str, Path]):
     it loads the data from the directory that TIRA mounted into the container as input dataset as specified via the TIRA_INPUT_DATASET variable.
 
     Args:
-        longeval_ir_dataset (Union[str, Path]): the ID of an LongEval ir_dataset or a local path.
+        longeval_ir_dataset (str): the ID of an LongEval ir_dataset or a local path.
     """
     if __is_in_tira_sandbox():
         # we do not have access to the internet in the TIRA sandbox

@@ -236,7 +236,7 @@ class LongEvalWebDataset(Dataset):
     def get_snapshot(self):
         return self.snapshot
 
-    def get_prior_snapshots(self):
+    def get_datasets(self):
         return None
 
     def get_prior_datasets(self):
@@ -287,7 +287,7 @@ def register():
             prior_datasets=SUB_COLLECTIONS_TRAIN[
                 : SUB_COLLECTIONS_TRAIN.index(timestamp)
             ],
-            snapshot=SUB_COLLECTIONS_TRAIN.index(timestamp)+1,
+            snapshot=timestamp,
         )
 
     for s in sorted(subsets):

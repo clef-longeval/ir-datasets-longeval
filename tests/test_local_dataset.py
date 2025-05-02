@@ -44,8 +44,8 @@ class TestLocalDataset(unittest.TestCase):
         )
         self.assertEqual(2024, dataset.get_timestamp().year)
         self.assertEqual([], dataset.get_prior_datasets())
-        self.assertEqual(1, dataset.get_snapshot())
-        self.assertEqual(None, dataset.get_prior_snapshots())
+        self.assertEqual("s1", dataset.get_snapshot())
+        self.assertEqual(None, dataset.get_datasets())
         docs_store = dataset.docs_store()
 
         for doc in expected_doc_ids:
@@ -81,7 +81,7 @@ class TestLocalDataset(unittest.TestCase):
         for doc in expected_doc_ids:
             self.assertEqual(doc, docs_store.get(doc).doc_id)
 
-        self.assertEqual(3, dataset.get_snapshot())
+        self.assertEqual("s3", dataset.get_snapshot())
         past_datasets = dataset.get_prior_datasets()
         self.assertEqual(2, len(past_datasets))
         for past_dataset in past_datasets:
@@ -124,8 +124,8 @@ class TestLocalDataset(unittest.TestCase):
         )
         self.assertEqual(2022, dataset.get_timestamp().year)
         self.assertEqual([], dataset.get_prior_datasets())
-        self.assertEqual(3, dataset.get_snapshot())
-        self.assertEqual(None, dataset.get_prior_snapshots())
+        self.assertEqual("s3", dataset.get_snapshot())
+        self.assertEqual(None, dataset.get_datasets())
         docs_store = dataset.docs_store()
 
         for doc in expected_doc_ids:
@@ -161,8 +161,8 @@ class TestLocalDataset(unittest.TestCase):
         for doc in expected_doc_ids:
             self.assertEqual(doc, docs_store.get(doc).doc_id)
 
-        self.assertEqual(4, dataset.get_snapshot())
-        self.assertEqual(None, dataset.get_prior_snapshots())
+        self.assertEqual("s3", dataset.get_snapshot())
+        self.assertEqual(None, dataset.get_datasets())
         past_datasets = dataset.get_prior_datasets()
         self.assertEqual(2, len(past_datasets))
         for past_dataset in past_datasets:

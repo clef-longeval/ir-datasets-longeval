@@ -65,6 +65,11 @@ class ExtractedPath:
     def __init__(self, path):
         self._path = path
 
+    def path(self, force=True):
+        if force and not self._path.exists():
+            raise FileNotFoundError(self._path)
+        return self._path
+
     @contextlib.contextmanager
     def stream(self):
         with open(self._path, "rb") as f:
@@ -78,7 +83,7 @@ class LongEvalSciDataset(Dataset):
         yaml_documentation: str = "longeval_sci.yaml",
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
-        snapshot: Optional[int] = None,
+        snapshot: Optional[str] = None,
     ):
         """LongEvalSciDataset class
 
@@ -87,7 +92,7 @@ class LongEvalSciDataset(Dataset):
             yaml_documentation (str, optional): Documentation file. Defaults to "longeval_sci.yaml".
             timestamp (Optional[str], optional): Timestamp in the YYYY-MM format of the snapshot. Defaults to None.
             prior_datasets (Optional[List[str]], optional): List of all snapshot that come before this snapshot. Defaults to None.
-            snapshot (Optional[int], optional): Index of the sub-collection in the time series. This was previously also referred to as lag. Defaults to None.
+            snapshot (Optional[str], optional): Name of the sub-collection. This was previously also referred to as lag and is most likely similar to the dataset_id. Defaults to None.
         """
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -161,7 +166,7 @@ class LongEvalSciDataset(Dataset):
     def get_snapshot(self):
         return self.snapshot
 
-    def get_prior_snapshots(self):
+    def get_datasets(self):
         return None
 
     def get_prior_datasets(self):
@@ -210,8 +215,8 @@ def register_spot_check_datasets():
             with_prior_data_truths / "qrels.txt", with_prior_data_inputs / "qrels.txt"
         )
 
-    no_prior = LongEvalSciDataset(no_prior_data_inputs, snapshot=1)
-    prior_data = LongEvalSciDataset(with_prior_data_inputs, snapshot=2)
+    no_prior = LongEvalSciDataset(no_prior_data_inputs, snapshot="s1")
+    prior_data = LongEvalSciDataset(with_prior_data_inputs, snapshot="s3")
     registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
     registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
     registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
@@ -241,7 +246,7 @@ def register():
         base_path=data_path,
         timestamp="2024-11",
         prior_datasets=[],
-        snapshot=1,
+        snapshot="2024-11-train",
     )
 
     for s in sorted(subsets):

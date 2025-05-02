@@ -1,7 +1,4 @@
-import json
 import unittest
-
-import pytest
 
 from ir_datasets_longeval import load
 
@@ -40,7 +37,8 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual([], dataset.get_prior_datasets())
 
         # Lag
-        self.assertEqual(1, dataset.get_snapshot())
+        self.assertEqual('2024-11-train', dataset.get_snapshot())
+        dataset.qrels_path()
 
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")
@@ -74,7 +72,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual([], dataset.get_prior_datasets())
 
         # Lag
-        self.assertEqual(1, dataset.get_snapshot())
+        self.assertEqual('2022-06', dataset.get_snapshot())
 
     def test_all_sci_datasets(self):
         dataset_id = "longeval-sci/*"
@@ -86,9 +84,9 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_prior_snapshots()
+        lags = meta_dataset.get_datasets()
         self.assertEqual(1, len(lags))
-        self.assertEqual(1, lags[0].get_snapshot())
+        self.assertEqual('2024-11-train', lags[0].get_snapshot())
 
     def test_all_web_datasets(self):
         dataset_id = "longeval-web/*"
@@ -100,6 +98,6 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_prior_snapshots()
+        lags = meta_dataset.get_datasets()
         self.assertEqual(9, len(lags))
-        self.assertEqual(1, lags[0].get_snapshot())
+        self.assertEqual("2022-06", lags[0].get_snapshot())

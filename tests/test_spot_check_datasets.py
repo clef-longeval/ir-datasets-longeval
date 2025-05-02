@@ -1,5 +1,4 @@
 import unittest
-from pathlib import Path
 
 from ir_datasets_longeval import load
 
@@ -73,7 +72,11 @@ class TestSpotCheckDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_prior_snapshots()
-        self.assertEqual(2, len(lags))
-        self.assertEqual(1, lags[0].get_snapshot())
-        self.assertEqual(2, lags[1].get_snapshot())
+        datasets = meta_dataset.get_datasets()
+        self.assertEqual(2, len(datasets))
+        self.assertEqual("s1", datasets[0].get_snapshot())
+        self.assertEqual("s3", datasets[1].get_snapshot())
+
+        for dataset in datasets:
+            dataset.get_prior_datasets()
+            dataset.qrels_path()

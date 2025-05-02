@@ -6,5 +6,5 @@ class MetaDataset(Dataset):
         super().__init__()
         self._datasets = datasets
 
-    def get_prior_snapshots(self):
+    def get_datasets(self):
         return self._datasets
