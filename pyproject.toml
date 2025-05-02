@@ -1,7 +1,7 @@
 [project]
 authors = [
-  {name = "Jan Heinrich Merker", email = "heinrich.merker@uni-jena.de"},
   {name = "Jüri Keller", email = "jueri.keller@th-koeln.de"},
+  {name = "Jan Heinrich Merker", email = "heinrich.merker@uni-jena.de"},
   {name = "Maik Fröbe", email = "maik.froebe@uni-jena.de"},
 ]
 classifiers = [
