@@ -57,7 +57,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("127164364", example_doc.doc_id)
+        self.assertEqual("68859258", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -73,7 +73,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual("2024-11", dataset.get_snapshot())
 
     def test_longeval_sci_2025_02(self):
-        dataset = load("longeval-sci/2025-02")
+        dataset = load("longeval-sci/2025-01")
 
         expected_queries = {"92ef8a97-8933-46bc-8c2e-e2d4f27bc4dc": "mpra paper"}
 
@@ -89,7 +89,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("57282207", example_doc.doc_id)
+        self.assertEqual("155554680", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -102,7 +102,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(2, len(dataset.get_prior_datasets()))
 
         # Lag
-        self.assertEqual("2025-02", dataset.get_snapshot())
+        self.assertEqual("2025-01", dataset.get_snapshot())
 
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")

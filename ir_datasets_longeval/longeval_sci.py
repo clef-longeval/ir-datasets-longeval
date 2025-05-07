@@ -272,11 +272,11 @@ def register():
     )
 
     queries_path = data_path / "queries_2025-01_test.txt"
-    subsets["2025-02"] = LongEvalSciDataset(
+    subsets["2025-01"] = LongEvalSciDataset(
         base_path=data_path,
-        timestamp="2025-02",
+        timestamp="2025-01",
         prior_datasets=[subsets["2024-11/train"], subsets["2024-11"]],
-        snapshot="2025-02",
+        snapshot="2025-01",
         queries_path=queries_path,
     )
 
