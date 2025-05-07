@@ -84,9 +84,10 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_datasets()
-        self.assertEqual(1, len(lags))
-        self.assertEqual('2024-11-train', lags[0].get_snapshot())
+        datasets = meta_dataset.get_datasets()
+        self.assertEqual(1, len(datasets))
+        self.assertEqual('2024-11-train', datasets[0].get_snapshot())      
+        
 
     def test_all_web_datasets(self):
         dataset_id = "longeval-web/*"
@@ -98,6 +99,24 @@ class TestOfficialDatasets(unittest.TestCase):
         with self.assertRaises(AttributeError):
             meta_dataset.docs_iter()
 
-        lags = meta_dataset.get_datasets()
-        self.assertEqual(9, len(lags))
-        self.assertEqual("2022-06", lags[0].get_snapshot())
+        datasets = meta_dataset.get_datasets()
+        self.assertEqual(9, len(datasets))
+        self.assertEqual("2022-06", datasets[0].get_snapshot())
+        
+        prior_datasets = 0
+        for dataset in datasets:
+            dataset_prior_datasets = dataset.get_prior_datasets()
+            self.assertEqual(prior_datasets, len(dataset_prior_datasets))
+            prior_datasets += 1
+            self.assertTrue(dataset.has_queries())
+            self.assertTrue(dataset.has_docs())
+            self.assertTrue(dataset.has_qrels())
+        
+
+            
+        prior_datasets = datasets[1].get_prior_datasets()
+        self.assertEqual(1, len(prior_datasets))
+        self.assertTrue(prior_datasets[0].has_queries())
+        self.assertTrue(prior_datasets[0].has_docs())
+        self.assertTrue(prior_datasets[0].has_qrels())
+        

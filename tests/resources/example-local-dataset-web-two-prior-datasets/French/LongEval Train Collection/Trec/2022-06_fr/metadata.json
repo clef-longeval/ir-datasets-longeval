@@ -1,0 +1,8 @@
+{
+    "base": "longeval-web",
+    "timestamp": "2022-06",
+    "prior-datasets": [
+        "prior-dataset-01",
+        "prior-dataset-02"
+    ]
+}
