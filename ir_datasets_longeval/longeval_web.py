@@ -334,7 +334,13 @@ def register():
         registry.register(f"{NAME}/{s}", subsets[s])
 
     if f"{NAME}/*" in registry:
-        # Already registered.
         return
 
     registry.register(f"{NAME}/*", MetaDataset(list(subsets.values())))
+
+    if f"{NAME}/clef-2025-test" in registry:
+        return
+    registry.register(
+        f"{NAME}/clef-2025-test",
+        MetaDataset([subsets[s] for s in SUB_COLLECTIONS_TEST]),
+    )

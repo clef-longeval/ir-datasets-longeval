@@ -178,3 +178,30 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(1, len(prior_datasets))
         self.assertTrue(prior_datasets[0].has_queries())
         self.assertTrue(prior_datasets[0].has_docs())
+
+    def test_clef_2025_sci_tag(self):
+        datasets = load("longeval-sci/clef-2025-test")
+
+        expected_tags = ["2024-11", "2025-01"]
+        tags = []
+        for dataset in datasets.get_datasets():
+            tags.append(dataset.get_snapshot())
+
+        self.assertEqual(sorted(expected_tags), sorted(tags))
+
+    def test_clef_2025_web_tag(self):
+        datasets = load("longeval-web/clef-2025-test")
+
+        expected_tags = [
+            "2023-03",
+            "2023-04",
+            "2023-05",
+            "2023-06",
+            "2023-07",
+            "2023-08",
+        ]
+        tags = []
+        for dataset in datasets.get_datasets():
+            tags.append(dataset.get_snapshot())
+
+        self.assertEqual(sorted(expected_tags), sorted(tags))
