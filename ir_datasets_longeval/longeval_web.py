@@ -1,7 +1,7 @@
 import contextlib
 import json
 import os
-import pickle
+import pickle  # nosec
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -68,7 +68,7 @@ class LongEvalWebMetadata:
             if os.path.exists(self._cache_file):
                 try:
                     with lz4.frame.open(self._cache_file, "rb") as f:
-                        self._metadata = pickle.load(f)
+                        self._metadata = pickle.load(f)  # nosec
                     logger.info(f"Loaded metadata from cache file {self._cache_file}")
 
                 except Exception as e:
