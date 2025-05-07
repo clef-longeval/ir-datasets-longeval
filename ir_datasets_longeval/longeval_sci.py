@@ -84,6 +84,7 @@ class LongEvalSciDataset(Dataset):
         timestamp: Optional[str] = None,
         prior_datasets: Optional[List[str]] = None,
         snapshot: Optional[str] = None,
+        queries_path: Optional[Path] = None,
     ):
         """LongEvalSciDataset class
 
@@ -111,7 +112,6 @@ class LongEvalSciDataset(Dataset):
 
         if not snapshot:
             try:
-                print("read snapshot from metadata")
                 snapshot = self.read_property_from_metadata("snapshot")
             except KeyError:
                 snapshot = None
@@ -145,7 +145,8 @@ class LongEvalSciDataset(Dataset):
             mapping=MAPPING,
         )
 
-        queries_path = base_path / "queries.txt"
+        if not queries_path:
+            queries_path = base_path / "queries.txt"
         if not queries_path.exists() or not queries_path.is_file():
             raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
@@ -170,7 +171,12 @@ class LongEvalSciDataset(Dataset):
         return None
 
     def get_prior_datasets(self):
-        return [LongEvalSciDataset(self.base_path / i) for i in self.prior_datasets]
+        if not self.prior_datasets:
+            return []
+        elif isinstance(self.prior_datasets[0], str):
+            return [LongEvalSciDataset(self.base_path / i) for i in self.prior_datasets]
+        else:
+            return self.prior_datasets
 
     def read_property_from_metadata(self, property):
         try:
@@ -229,14 +235,12 @@ def register():
         return
 
     base_path = home_path() / NAME
-
     dlc = DownloadConfig.context(NAME, base_path)
-    base_path = home_path() / NAME
 
     subsets = {}
 
     # 2025 train
-    data_path = (
+    data_path_train = (
         ZipExtractCache(
             dlc["longeval_sci_training_2025"], base_path / "longeval_sci_training_2025"
         ).path()
@@ -244,10 +248,36 @@ def register():
     )
 
     subsets["2024-11/train"] = LongEvalSciDataset(
-        base_path=data_path,
+        base_path=data_path_train,
         timestamp="2024-11",
         prior_datasets=[],
         snapshot="2024-11-train",
+    )
+
+    # 2025 test
+    data_path = (
+        ZipExtractCache(
+            dlc["longeval_sci_testing_2025"],
+            base_path / "longeval_sci_testing_2025",
+        ).path()
+        / "longeval_sci_testing_2025_abstract"
+    )
+    queries_path = data_path / "queries_2024-11_test.txt"
+    subsets["2024-11"] = LongEvalSciDataset(
+        base_path=data_path_train,
+        timestamp="2024-11",
+        prior_datasets=[subsets["2024-11/train"]],
+        snapshot="2024-11",
+        queries_path=queries_path,
+    )
+
+    queries_path = data_path / "queries_2025-01_test.txt"
+    subsets["2025-02"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-02",
+        prior_datasets=[subsets["2024-11/train"], subsets["2024-11"]],
+        snapshot="2025-02",
+        queries_path=queries_path,
     )
 
     for s in sorted(subsets):

@@ -40,6 +40,70 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual("2024-11-train", dataset.get_snapshot())
         dataset.qrels_path()
 
+    def test_longeval_sci_2024_11(self):
+        dataset = load("longeval-sci/2024-11")
+
+        expected_queries = {"51c0e5f8-f270-4996-8a04-cbd9a52b3406": "deus"}
+
+        # Dataset
+        self.assertIsNotNone(dataset)
+        example_doc = dataset.docs_iter().__next__()
+
+        # Queries
+        actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
+        self.assertEqual(99, len(actual_queries))
+        for k, v in expected_queries.items():
+            self.assertEqual(v, actual_queries[k])
+
+        # Docs
+        self.assertIsNotNone(example_doc.doc_id)
+        self.assertEqual("127164364", example_doc.doc_id)
+
+        # Docstore
+        docs_store = dataset.docs_store()
+        self.assertEqual("42999748", docs_store.get("42999748").doc_id)
+
+        # Timestamp
+        self.assertEqual(2024, dataset.get_timestamp().year)
+
+        # Prior datasets
+        self.assertEqual(1, len(dataset.get_prior_datasets()))
+
+        # Lag
+        self.assertEqual("2024-11", dataset.get_snapshot())
+
+    def test_longeval_sci_2025_02(self):
+        dataset = load("longeval-sci/2025-02")
+
+        expected_queries = {"92ef8a97-8933-46bc-8c2e-e2d4f27bc4dc": "mpra paper"}
+
+        # Dataset
+        self.assertIsNotNone(dataset)
+        example_doc = dataset.docs_iter().__next__()
+
+        # Queries
+        actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
+        self.assertEqual(492, len(actual_queries))
+        for k, v in expected_queries.items():
+            self.assertEqual(v, actual_queries[k])
+
+        # Docs
+        self.assertIsNotNone(example_doc.doc_id)
+        self.assertEqual("57282207", example_doc.doc_id)
+
+        # Docstore
+        docs_store = dataset.docs_store()
+        self.assertEqual("42999748", docs_store.get("42999748").doc_id)
+
+        # Timestamp
+        self.assertEqual(2025, dataset.get_timestamp().year)
+
+        # Prior datasets
+        self.assertEqual(2, len(dataset.get_prior_datasets()))
+
+        # Lag
+        self.assertEqual("2025-02", dataset.get_snapshot())
+
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")
 
@@ -85,7 +149,7 @@ class TestOfficialDatasets(unittest.TestCase):
             meta_dataset.docs_iter()
 
         datasets = meta_dataset.get_datasets()
-        self.assertEqual(1, len(datasets))
+        self.assertEqual(3, len(datasets))
         self.assertEqual("2024-11-train", datasets[0].get_snapshot())
 
     def test_all_web_datasets(self):
