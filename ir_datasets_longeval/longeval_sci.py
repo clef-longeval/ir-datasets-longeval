@@ -112,7 +112,6 @@ class LongEvalSciDataset(Dataset):
 
         if not snapshot:
             try:
-                print("read snapshot from metadata")
                 snapshot = self.read_property_from_metadata("snapshot")
             except KeyError:
                 snapshot = None
