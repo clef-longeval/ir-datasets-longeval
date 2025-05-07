@@ -11,6 +11,10 @@
       "description": "This is a tiny spot check dataset in the LongEval SCI format on which you can ensure that your approach works and produces valid outputs. This dataset has prior/historical data available so that you can ensure that your approach works when queries have been seen before.",
       "cache_path": "longeval_sci_training_2025.zip"
     },
+    "longeval_sci_testing_2025": {
+      "url": "https://researchdata.tuwien.ac.at/records/v8phe-g8911/files/longeval_sci_testing_2025_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjA2MTc3ZTFmLTVhNTgtNDAyNy1iM2RiLTI3NmNjODFjYTUyNiIsImRhdGEiOnt9LCJyYW5kb20iOiJjZThiOWZlNTRhYmQxY2RmMzcwMmUzZjk2MjMyZTk3NiJ9.CkF7GsI2h0ftrLa6JuOwipoHYBhtErrtqBXwGQA4ms1bvxqAukljlmHM1cVWUBYKtkfv6K7oU9eRs71YNrs5FA",
+      "cache_path": "longeval_sci_testing_2025.zip"
+    },
     "sci-spot-check-no-prior-data-20250322-training-inputs": {
       "url": "https://www.tira.io/data-download/training/input-/sci-spot-check-no-prior-data-20250322-training.zip",
       "description": "This is a tiny spot check dataset in the LongEval SCI format on which you can ensure that your approach works and produces valid outputs. This dataset has no prior data available so that you can ensure that your approach works on unseen queries.",
