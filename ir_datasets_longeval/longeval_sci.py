@@ -268,6 +268,7 @@ def register():
         timestamp="2024-11",
         prior_datasets=[subsets["2024-11/train"]],
         snapshot="2024-11",
+        queries_path=queries_path,
     )
 
     queries_path = data_path / "queries_2025-01_test.txt"

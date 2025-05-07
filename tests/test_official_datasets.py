@@ -24,7 +24,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("68859258", example_doc.doc_id)
+        self.assertEqual("127164364", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -43,7 +43,7 @@ class TestOfficialDatasets(unittest.TestCase):
     def test_longeval_sci_2024_11(self):
         dataset = load("longeval-sci/2024-11")
 
-        expected_queries = {"d636a980-15ab-4354-a008-71b4241f2ada": "accounting"}
+        expected_queries = {"51c0e5f8-f270-4996-8a04-cbd9a52b3406": "deus"}
 
         # Dataset
         self.assertIsNotNone(dataset)
@@ -51,13 +51,13 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Queries
         actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
-        self.assertEqual(393, len(actual_queries))
+        self.assertEqual(99, len(actual_queries))
         for k, v in expected_queries.items():
             self.assertEqual(v, actual_queries[k])
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("68859258", example_doc.doc_id)
+        self.assertEqual("127164364", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -89,7 +89,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("155554680", example_doc.doc_id)
+        self.assertEqual("57282207", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -123,7 +123,7 @@ class TestOfficialDatasets(unittest.TestCase):
         self.assertEqual(85776, len(list(dataset.qrels_iter())))
 
         # Docs
-        self.assertEqual("44971", example_doc.doc_id)
+        self.assertEqual("938880", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
