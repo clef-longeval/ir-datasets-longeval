@@ -1,7 +1,7 @@
 import contextlib
 import json
 import os
-import pickle
+import pickle  # nosec
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -38,6 +38,14 @@ SUB_COLLECTIONS_TRAIN = [
     "2023-01",
     "2023-02",
 ]
+SUB_COLLECTIONS_TEST = [
+    "2023-03",
+    "2023-04",
+    "2023-05",
+    "2023-06",
+    "2023-07",
+    "2023-08",
+]
 DUA = "Please confirm you agree to the TREC data usage agreement found at " "<TBD>"
 
 
@@ -60,7 +68,7 @@ class LongEvalWebMetadata:
             if os.path.exists(self._cache_file):
                 try:
                     with lz4.frame.open(self._cache_file, "rb") as f:
-                        self._metadata = pickle.load(f)
+                        self._metadata = pickle.load(f)  # nosec
                     logger.info(f"Loaded metadata from cache file {self._cache_file}")
 
                 except Exception as e:
@@ -180,6 +188,7 @@ class LongEvalWebDataset(Dataset):
         base_path: Path,
         meta: Optional[LongEvalWebMetadata] = None,
         yaml_documentation: str = "longeval_web.yaml",
+        prior_datasets: Optional[List[str]] = None,
     ):
         """LongEval Web Dataset
         This class needs a metadata file to be available in the base_path for not official datasets.
@@ -187,18 +196,19 @@ class LongEvalWebDataset(Dataset):
         ```
         <dataset_root>
         └── French
-            ├── LongEval Train Collection
-            │   ├── qrels
-            │   │   └── <snapshot>_<language>
-            │   │       └── qrels_processed.txt
-            │   └── Trec
-            │       └── <snapshot>_<language>
-            │           ├── <documents split>.trec
-            │           ├── ...
-            │           └── metadata.json
-            └── queries.txt
+            └── LongEval Train Collection
+                ├── qrels
+                │   └── <snapshot>_<language>
+                │       └── qrels_processed.txt
+                ├── Trec
+                │   ├── <snapshot>_<language>
+                │       ├── <documents split>.trec
+                │       ├── ...
+                │       └── metadata.json
+                └── queries
+                    └── <snapshot>_queries.txt
         ```
-        
+
         Args:
             base_path (Path): Path to the document collection root dir.
             meta (Optional[LongEvalWebMetadata], optional): Path to the metadata dir if available. Defaults to None.
@@ -215,16 +225,17 @@ class LongEvalWebDataset(Dataset):
 
         self.snapshot = "_".join(self.base_path.name.split("_")[:-1])
         self.language = self.base_path.name.split("_")[-1]
-        
+
         timestamp = self.read_property_from_metadata("timestamp")
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
 
-        prior_datasets = self.read_property_from_metadata("prior-datasets")
+        if prior_datasets is None:
+            prior_datasets = self.read_property_from_metadata("prior-datasets")
         self.prior_datasets = prior_datasets
 
         docs = LongEvalDocs(ExtractedPath(base_path), meta)
 
-        queries_path = base_path.parents[2] / "queries.txt"
+        queries_path = base_path.parents[1] / "queries" / f"{self.snapshot}_queries.txt"
         if not queries_path.exists() or not queries_path.is_file():
             raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
@@ -232,7 +243,11 @@ class LongEvalWebDataset(Dataset):
         queries = TsvQueries(ExtractedPath(queries_path), lang="fr")
 
         qrels = None
-        qrels_path = base_path.parents[1] / "qrels" / f"{self.snapshot}_{self.language}/qrels_processed.txt"
+        qrels_path = (
+            base_path.parents[1]
+            / "qrels"
+            / f"{self.snapshot}_{self.language}/qrels_processed.txt"
+        )
         if qrels_path.exists() and qrels_path.is_file():
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 
@@ -248,29 +263,31 @@ class LongEvalWebDataset(Dataset):
         return None
 
     def get_prior_datasets(self):
-        return [
-            LongEvalWebDataset(
-                base_path=self.base_path.parent / f"{i}_{self.language}",
-                meta=self.meta,
-            )
-            for i in self.prior_datasets
-        ]
+        if not self.prior_datasets:
+            return []
+        elif isinstance(self.prior_datasets[0], str):
+            return [
+                LongEvalWebDataset(
+                    base_path=self.base_path.parent / f"{i}_{self.language}",
+                    meta=self.meta,
+                )
+                for i in self.prior_datasets
+            ]
+        else:
+            return self.prior_datasets
 
     def read_property_from_metadata(self, property):
         try:
             return json.load(open(self.base_path / "metadata.json", "r"))[property]
         except FileNotFoundError:
             metadata = json.loads(get_data("ir_datasets_longeval", "metadata.json"))
-            return metadata[f"longeval-web/{self.snapshot}"][
-                property
-            ]
+            return metadata[f"longeval-web/{self.snapshot}"][property]
 
 
 def register():
     base_path = home_path() / NAME
 
     dlc = DownloadConfig.context(NAME, base_path)
-    base_path = home_path() / NAME
 
     data_path = (
         ZipExtractCache(
@@ -281,7 +298,7 @@ def register():
 
     meta = LongEvalWebMetadata(data_path / "French")
 
-    base_path = data_path / "French" / "LongEval Train Collection" / "Trec" 
+    base_path_train = data_path / "French" / "LongEval Train Collection" / "Trec"
 
     subsets = {}
     for snapshot in SUB_COLLECTIONS_TRAIN:
@@ -290,8 +307,27 @@ def register():
             continue
 
         subsets[snapshot] = LongEvalWebDataset(
-            base_path=base_path / f"{snapshot}_fr",
-            meta=meta
+            base_path=base_path_train / f"{snapshot}_fr",
+            meta=meta,
+            prior_datasets=list(subsets.values())[::-1],
+        )
+
+    data_path_test = (
+        ZipExtractCache(
+            dlc["longeval_2025_test_collection"],
+            base_path / "LongEval Test Collection",
+        ).path()
+        / "LongEval Test Collection"
+    )
+    base_path_test = data_path_test / "Trec"
+    for snapshot in SUB_COLLECTIONS_TEST:
+        if f"{NAME}/{snapshot}" in registry:
+            # Already registered.
+            continue
+
+        subsets[snapshot] = LongEvalWebDataset(
+            base_path=base_path_test / f"{snapshot}_fr",
+            prior_datasets=list(subsets.values())[::-1],
         )
 
     for s in sorted(subsets):
@@ -300,4 +336,5 @@ def register():
     if f"{NAME}/*" in registry:
         # Already registered.
         return
+
     registry.register(f"{NAME}/*", MetaDataset(list(subsets.values())))
