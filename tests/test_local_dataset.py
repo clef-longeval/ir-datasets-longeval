@@ -101,6 +101,10 @@ class TestLocalDataset(unittest.TestCase):
                 Path(__file__).parent
                 / "resources"
                 / "example-local-dataset-web-no-prior-datasets"
+                / "French"
+                / "LongEval Train Collection"
+                / "Trec"
+                / "2022-06_fr"
             )
             .absolute()
             .resolve()
@@ -124,7 +128,7 @@ class TestLocalDataset(unittest.TestCase):
         )
         self.assertEqual(2022, dataset.get_timestamp().year)
         self.assertEqual([], dataset.get_prior_datasets())
-        self.assertEqual("s3", dataset.get_snapshot())
+        self.assertEqual("2022-06", dataset.get_snapshot())
         self.assertEqual(None, dataset.get_datasets())
         docs_store = dataset.docs_store()
 
@@ -140,6 +144,10 @@ class TestLocalDataset(unittest.TestCase):
                 Path(__file__).parent
                 / "resources"
                 / "example-local-dataset-web-two-prior-datasets"
+                / "French"
+                / "LongEval Train Collection"
+                / "Trec"
+                / "2022-06_fr"
             )
             .absolute()
             .resolve()
@@ -161,10 +169,14 @@ class TestLocalDataset(unittest.TestCase):
         for doc in expected_doc_ids:
             self.assertEqual(doc, docs_store.get(doc).doc_id)
 
-        self.assertEqual("s3", dataset.get_snapshot())
+        self.assertEqual("2022-06", dataset.get_snapshot())
         self.assertEqual(None, dataset.get_datasets())
+        
         past_datasets = dataset.get_prior_datasets()
-        self.assertEqual(2, len(past_datasets))
+        expected_prior_datasets = ["prior-dataset-01", "prior-dataset-02"]
+        self.assertEqual(len(expected_prior_datasets), len(past_datasets))
         for past_dataset in past_datasets:
+            self.assertEqual(expected_prior_datasets[0], past_dataset.get_snapshot())
             self.assertEqual(2022, past_dataset.get_timestamp().year)
-            self.assertEqual(0, len(past_dataset.get_prior_datasets()))
+            expected_prior_datasets.pop(0)
+            self.assertEqual(len(expected_prior_datasets), len(past_dataset.get_prior_datasets()))

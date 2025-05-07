@@ -180,10 +180,30 @@ class LongEvalWebDataset(Dataset):
         base_path: Path,
         meta: Optional[LongEvalWebMetadata] = None,
         yaml_documentation: str = "longeval_web.yaml",
-        timestamp: Optional[str] = None,
-        prior_datasets: Optional[List[str]] = None,
-        snapshot: Optional[str] = None,
     ):
+        """LongEval Web Dataset
+        This class needs a metadata file to be available in the base_path for not official datasets.
+        The basepath provides the general directory structure of the dataset. From the base path the snapshot and language are inferred. Every non official dataset needs to have follow this structure:
+        ```
+        <dataset_root>
+        └── French
+            ├── LongEval Train Collection
+            │   ├── qrels
+            │   │   └── <snapshot>_<language>
+            │   │       └── qrels_processed.txt
+            │   └── Trec
+            │       └── <snapshot>_<language>
+            │           ├── <documents split>.trec
+            │           ├── ...
+            │           └── metadata.json
+            └── queries.txt
+        ```
+        
+        Args:
+            base_path (Path): Path to the document collection root dir.
+            meta (Optional[LongEvalWebMetadata], optional): Path to the metadata dir if available. Defaults to None.
+            yaml_documentation (str, optional): Documentation file. Defaults to "longeval_web.yaml".
+        """
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
         self.meta = meta
@@ -193,27 +213,18 @@ class LongEvalWebDataset(Dataset):
                 f"I expected that the directory {base_path} exists. But the directory does not exist."
             )
 
-        if not timestamp:
-            timestamp = self.read_property_from_metadata("timestamp")
-
+        self.snapshot = "_".join(self.base_path.name.split("_")[:-1])
+        self.language = self.base_path.name.split("_")[-1]
+        
+        timestamp = self.read_property_from_metadata("timestamp")
         self.timestamp = datetime.strptime(timestamp, "%Y-%m")
 
-        if not snapshot:
-            try:
-                snapshot = self.read_property_from_metadata("snapshot")
-            except KeyError:
-                snapshot = None
-        self.snapshot = snapshot
-
-        if prior_datasets is None:
-            prior_datasets = self.read_property_from_metadata("prior-datasets")
-
+        prior_datasets = self.read_property_from_metadata("prior-datasets")
         self.prior_datasets = prior_datasets
 
-        docs_path = base_path / f"French/LongEval Train Collection/Trec/{timestamp}_fr"
-        docs = LongEvalDocs(ExtractedPath(docs_path), meta)
+        docs = LongEvalDocs(ExtractedPath(base_path), meta)
 
-        queries_path = base_path / "French/queries.txt"
+        queries_path = base_path.parents[2] / "queries.txt"
         if not queries_path.exists() or not queries_path.is_file():
             raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
@@ -221,10 +232,7 @@ class LongEvalWebDataset(Dataset):
         queries = TsvQueries(ExtractedPath(queries_path), lang="fr")
 
         qrels = None
-        qrels_path = (
-            base_path
-            / f"French/LongEval Train Collection/qrels/{timestamp}_fr/qrels_processed.txt"
-        )
+        qrels_path = base_path.parents[1] / "qrels" / f"{self.snapshot}_{self.language}/qrels_processed.txt"
         if qrels_path.exists() and qrels_path.is_file():
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 
@@ -242,7 +250,8 @@ class LongEvalWebDataset(Dataset):
     def get_prior_datasets(self):
         return [
             LongEvalWebDataset(
-                base_path=self.base_path / i,
+                base_path=self.base_path.parent / f"{i}_{self.language}",
+                meta=self.meta,
             )
             for i in self.prior_datasets
         ]
@@ -252,7 +261,7 @@ class LongEvalWebDataset(Dataset):
             return json.load(open(self.base_path / "metadata.json", "r"))[property]
         except FileNotFoundError:
             metadata = json.loads(get_data("ir_datasets_longeval", "metadata.json"))
-            return metadata[f"longeval-web/{self.timestamp.strftime('%Y-%m')}"][
+            return metadata[f"longeval-web/{self.snapshot}"][
                 property
             ]
 
@@ -272,22 +281,17 @@ def register():
 
     meta = LongEvalWebMetadata(data_path / "French")
 
-    subsets = {}
+    base_path = data_path / "French" / "LongEval Train Collection" / "Trec" 
 
-    for timestamp in SUB_COLLECTIONS_TRAIN:
-        if f"{NAME}/{timestamp}" in registry:
+    subsets = {}
+    for snapshot in SUB_COLLECTIONS_TRAIN:
+        if f"{NAME}/{snapshot}" in registry:
             # Already registered.
             continue
 
-        subsets[timestamp] = LongEvalWebDataset(
-            base_path=data_path,
-            meta=meta,
-            yaml_documentation="longeval_web.yaml",
-            timestamp=timestamp,
-            prior_datasets=SUB_COLLECTIONS_TRAIN[
-                : SUB_COLLECTIONS_TRAIN.index(timestamp)
-            ],
-            snapshot=timestamp,
+        subsets[snapshot] = LongEvalWebDataset(
+            base_path=base_path / f"{snapshot}_fr",
+            meta=meta
         )
 
     for s in sorted(subsets):

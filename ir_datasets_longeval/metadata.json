@@ -9,7 +9,8 @@
     "snapshot": "2025-01"
   },
   "longeval-web/2022-06": {
-    "snapshot": "2022-06",
+    "timestamp": "2022-06",
+    "prior-datasets": [],
     "qrels": {
       "count": 85776,
       "fields": {
@@ -42,7 +43,10 @@
     }
   },
   "longeval-web/2022-07": {
-    "snapshot": "2022-07",
+    "timestamp": "2022-07",
+    "prior-datasets": [
+      "2022-06"
+    ],
     "qrels": {
       "count": 107916,
       "fields": {
@@ -75,7 +79,11 @@
     }
   },
   "longeval-web/2022-08": {
-    "snapshot": "2022-08",
+    "timestamp": "2022-08",
+    "prior-datasets": [
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 133001,
       "fields": {
@@ -108,7 +116,12 @@
     }
   },
   "longeval-web/2022-09": {
-    "snapshot": "2022-09",
+    "timestamp": "2022-09",
+    "prior-datasets": [
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 135483,
       "fields": {
@@ -141,7 +154,13 @@
     }
   },
   "longeval-web/2022-10": {
-    "snapshot": "2022-10",
+    "timestamp": "2022-10",
+    "prior-datasets": [
+      "2022-09",
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 123967,
       "fields": {
@@ -174,7 +193,14 @@
     }
   },
   "longeval-web/2022-11": {
-    "snapshot": "2022-11",
+    "timestamp": "2022-11",
+    "prior-datasets": [
+      "2022-10",
+      "2022-09",
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 138031,
       "fields": {
@@ -207,7 +233,15 @@
     }
   },
   "longeval-web/2022-12": {
-    "snapshot": "2022-12",
+    "timestamp": "2022-12",
+    "prior-datasets": [
+      "2022-11",
+      "2022-10",
+      "2022-09",
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 139035,
       "fields": {
@@ -240,7 +274,16 @@
     }
   },
   "longeval-web/2023-01": {
-    "snapshot": "2023-01",
+    "timestamp": "2023-01",
+    "prior-datasets": [
+      "2022-12",
+      "2022-11",
+      "2022-10",
+      "2022-09",
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 133244,
       "fields": {
@@ -273,7 +316,17 @@
     }
   },
   "longeval-web/2023-02": {
-    "snapshot": "2023-02",
+    "timestamp": "2023-02",
+    "prior-datasets": [
+      "2023-01",
+      "2022-12",
+      "2022-11",
+      "2022-10",
+      "2022-09",
+      "2022-08",
+      "2022-07",
+      "2022-06"
+    ],
     "qrels": {
       "count": 55718,
       "fields": {
