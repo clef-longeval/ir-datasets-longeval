@@ -51,6 +51,53 @@ class TestLocalDataset(unittest.TestCase):
         for doc in expected_doc_ids:
             self.assertEqual(doc, docs_store.get(doc).doc_id)
 
+    def test_local_dataset_without_prior_datasets_multiple_docs_iter(self):
+        expected_doc_ids = sorted(["77444382", "140120179", "44934830", "34195138"])
+        expected_queries = {"1234-1234-1234-1234-1234": "selection bias"}
+        expected_qrels = [
+            {"doc_id": "140120179", "query_id": "1234-1234-1234-1234-1234", "rel": 2}
+        ]
+        dataset_id = str(
+            (
+                Path(__file__).parent
+                / "resources"
+                / "example-local-dataset-no-prior-datasets"
+            )
+            .absolute()
+            .resolve()
+        )
+        dataset = load(dataset_id)
+
+        self.assertIsNotNone(dataset)
+        self.assertEqual(
+            expected_doc_ids, sorted([i.doc_id for i in dataset.docs_iter()])
+        )
+        self.assertEqual(
+            expected_doc_ids, sorted([i.doc_id for i in dataset.docs_iter()])
+        )
+        self.assertEqual(
+            expected_doc_ids, sorted([i.doc_id for i in dataset.docs_iter()])
+        )
+        self.assertEqual(
+            expected_queries,
+            {i.query_id: i.default_text() for i in dataset.queries_iter()},
+        )
+        self.assertEqual(
+            expected_qrels,
+            [
+                {"query_id": i.query_id, "doc_id": i.doc_id, "rel": i.relevance}
+                for i in dataset.qrels_iter()
+            ],
+        )
+        self.assertEqual(2024, dataset.get_timestamp().year)
+        self.assertEqual([], dataset.get_prior_datasets())
+        self.assertEqual("s1", dataset.get_snapshot())
+        self.assertEqual(None, dataset.get_datasets())
+        docs_store = dataset.docs_store()
+
+        for doc in expected_doc_ids:
+            self.assertEqual(doc, docs_store.get(doc).doc_id)
+
     def test_local_dataset_with_two_prior_datasets(self):
         expected_doc_ids = sorted(["77444382", "140120179", "44934830", "34195138"])
         expected_queries = {"1": "some cool query"}

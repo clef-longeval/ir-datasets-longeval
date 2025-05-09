@@ -76,6 +76,13 @@ class ExtractedPath:
             yield f
 
 
+def docs_iter_without_duplicates(iterator):
+    returned = set()
+    for doc in iterator:
+        if doc.doc_id not in returned and doc.default_text():
+            returned.add(doc.doc_id)
+            yield doc
+
 class LongEvalSciDataset(Dataset):
     def __init__(
         self,
@@ -160,6 +167,8 @@ class LongEvalSciDataset(Dataset):
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 
         super().__init__(docs, queries, qrels, documentation)
+        original_iter = self.docs_iter
+        self.docs_iter = lambda: docs_iter_without_duplicates(original_iter())
 
     def get_timestamp(self):
         return self.timestamp
@@ -169,13 +178,6 @@ class LongEvalSciDataset(Dataset):
 
     def get_datasets(self):
         return None
-
-    def docs_iter(self):
-        returned = set()
-        for doc in super().docs_iter():
-            if doc.doc_id not in returned and doc.default_text():
-                ret.add(doc.doc_id)
-                yield doc
 
     def get_prior_datasets(self):
         if not self.prior_datasets:
