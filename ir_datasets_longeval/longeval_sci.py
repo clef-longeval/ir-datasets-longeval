@@ -170,6 +170,13 @@ class LongEvalSciDataset(Dataset):
     def get_datasets(self):
         return None
 
+    def docs_iter(self):
+        returned = set()
+        for doc in super().docs_iter():
+            if doc.doc_id not in returned and doc.default_text():
+                ret.add(doc.doc_id)
+                yield doc
+
     def get_prior_datasets(self):
         if not self.prior_datasets:
             return []
