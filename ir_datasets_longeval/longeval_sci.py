@@ -83,6 +83,7 @@ def docs_iter_without_duplicates(iterator):
             returned.add(doc.doc_id)
             yield doc
 
+
 class LongEvalSciDataset(Dataset):
     def __init__(
         self,
@@ -165,6 +166,10 @@ class LongEvalSciDataset(Dataset):
         qrels_path = base_path / "qrels.txt"
         if qrels_path.exists() and qrels_path.is_file():
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
+
+        # BUG: for longeval-sci/2024-11, the basepath from 2024-11/train is provided which contains qrels for 2024-11/train. To temporarily prevent that the wrong queries are loaded we overwrite the qrels here again. This will be fixed with the test qrels release.
+        if snapshot == "2024-11" and queries_path.name == "queries_2024-11_test.txt":
+            qrels = None
 
         super().__init__(docs, queries, qrels, documentation)
         original_iter = self.docs_iter
@@ -295,7 +300,9 @@ def register():
     if f"{NAME}/*" in registry:
         return
     registry.register(f"{NAME}/*", MetaDataset(list(subsets.values())))
-    
+
     if f"{NAME}/clef-2025-test" in registry:
         return
-    registry.register(f"{NAME}/clef-2025-test", MetaDataset([subsets["2024-11"], subsets["2025-01"]]))
+    registry.register(
+        f"{NAME}/clef-2025-test", MetaDataset([subsets["2024-11"], subsets["2025-01"]])
+    )

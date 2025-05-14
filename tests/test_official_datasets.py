@@ -24,7 +24,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("68859258", example_doc.doc_id)
+        self.assertEqual("127164364", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -39,6 +39,11 @@ class TestOfficialDatasets(unittest.TestCase):
         # Lag
         self.assertEqual("2024-11-train", dataset.get_snapshot())
         dataset.qrels_path()
+
+        # components
+        self.assertEqual(dataset.has_qrels(), True)
+        self.assertEqual(dataset.has_queries(), True)
+        self.assertEqual(dataset.has_docs(), True)
 
     def test_longeval_sci_2024_11(self):
         dataset = load("longeval-sci/2024-11")
@@ -57,7 +62,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("68859258", example_doc.doc_id)
+        self.assertEqual("127164364", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -71,6 +76,11 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Lag
         self.assertEqual("2024-11", dataset.get_snapshot())
+
+        # components
+        self.assertEqual(dataset.has_qrels(), False)
+        self.assertEqual(dataset.has_queries(), True)
+        self.assertEqual(dataset.has_docs(), True)
 
     def test_longeval_sci_2025_02(self):
         dataset = load("longeval-sci/2025-01")
@@ -89,7 +99,7 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Docs
         self.assertIsNotNone(example_doc.doc_id)
-        self.assertEqual("155554680", example_doc.doc_id)
+        self.assertEqual("57282207", example_doc.doc_id)
 
         # Docstore
         docs_store = dataset.docs_store()
@@ -103,6 +113,11 @@ class TestOfficialDatasets(unittest.TestCase):
 
         # Lag
         self.assertEqual("2025-01", dataset.get_snapshot())
+
+        # components
+        self.assertEqual(dataset.has_qrels(), False)
+        self.assertEqual(dataset.has_queries(), True)
+        self.assertEqual(dataset.has_docs(), True)
 
     def test_web_dataset(self):
         dataset = load("longeval-web/2022-06")
