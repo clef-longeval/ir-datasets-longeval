@@ -64,12 +64,13 @@ If you use this package, please cite the original ir_datasets paper and this ext
 
 ```
 @inproceedings{ir_datasets_longeval,
-  author       = {J{\"{u}}ri Keller and Maik Fr{\"{o}}be and Gijs Hendriksen and Daria Alexander and Martin Potthast and Philipp Schaer}}},
+  author       = {J{\"{u}}ri Keller and Maik Fr{\"{o}}be and Gijs Hendriksen and Daria Alexander and Martin Potthast and Philipp Schaer},
   title        = {Simplified Longitudinal Retrieval Experiments: A Case Study on Query Expansion and Document Boosting},
   booktitle    = {Experimental {IR} Meets Multilinguality, Multimodality, and Interaction - 16th International Conference of the {CLEF} Association, {CLEF} 2024, Madrid, Spain, September 9-12, 2025, Proceedings, Part {I}},
   series       = {Lecture Notes in Computer Science},
   publisher    = {Springer},
-  year         = {2025}}
+  year         = {2025}
+}
 ```
 
 ## Development
