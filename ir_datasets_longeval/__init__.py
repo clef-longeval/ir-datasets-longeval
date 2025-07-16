@@ -6,17 +6,23 @@ from typing import Union
 from ir_datasets import main_cli as irds_main_cli
 from ir_datasets import registry as irds_registry
 
-from ir_datasets_longeval.longeval_sci import LongEvalSciDataset
-from ir_datasets_longeval.longeval_sci import register as register_longeval_sci
-from ir_datasets_longeval.longeval_sci import (
+from ir_datasets_longeval.datasets.longeval_2023 import LongEvalDataset
+from ir_datasets_longeval.datasets.longeval_2023 import (
+    register as register_longeval_2023,
+)
+from ir_datasets_longeval.datasets.longeval_sci import LongEvalSciDataset
+from ir_datasets_longeval.datasets.longeval_sci import register as register_longeval_sci
+from ir_datasets_longeval.datasets.longeval_sci import (
     register_spot_check_datasets as register_spot_check_datasets_sci,
 )
-from ir_datasets_longeval.longeval_web import LongEvalWebDataset
-from ir_datasets_longeval.longeval_web import register as register_longeval_web
+from ir_datasets_longeval.datasets.longeval_web import LongEvalWebDataset
+from ir_datasets_longeval.datasets.longeval_web import register as register_longeval_web
 
 
 def read_property_from_metadata(base_path, property):
-    base = json.load(open(Path(base_path) / "metadata.json", "r")).get(property, "")
+    base = json.load(open(Path(base_path) / "etc" / "metadata.json", "r")).get(
+        property, ""
+    )
     return base
 
 
@@ -43,6 +49,8 @@ def load(longeval_ir_dataset: Union[str]):
         register_longeval_sci()
     elif longeval_ir_dataset.startswith("longeval-web"):
         register_longeval_web()
+    elif longeval_ir_dataset.startswith("longeval-2023"):
+        register_longeval_2023()
 
     exists_locally = (
         longeval_ir_dataset
@@ -88,9 +96,12 @@ def register(dataset=None) -> None:
         register_longeval_sci()
     elif dataset == "longeval-web":
         register_longeval_web()
+    elif dataset == "longeval-2023":
+        register_longeval_2023()
     else:
         register_longeval_web()
         register_longeval_sci()
+        register_longeval_2023()
 
 
 def main_cli() -> None:
