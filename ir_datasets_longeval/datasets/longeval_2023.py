@@ -31,6 +31,10 @@ SUB_COLLECTIONS_TEST = [
     "2022-07",
     "2022-09",
 ]
+DUA = (
+    "Please confirm you agree to the Qwant LongEval Attribution-NonCommercial-ShareAlike License found at "
+    "<https://lindat.mff.cuni.cz/repository/static/Qwant_LongEval_BY-NC-SA_License.html>"
+)
 
 
 class LongEvalMetadataItem(NamedTuple):
@@ -141,30 +145,7 @@ class LongEvalDataset(Dataset):
         snapshot: Optional[str] = None,
         lang: str = "en",
     ):
-        """LongEval Web Dataset
-        This class needs a metadata file to be available in the base_path for not official datasets.
-        The basepath provides the general directory structure of the dataset. From the base path the snapshot and language are inferred. Every non official dataset needs to have follow this structure:
-        ```
-        <dataset_root>
-        └── French
-            └── LongEval Train Collection
-                ├── qrels
-                │   └── <snapshot>_<language>
-                │       └── qrels_processed.txt
-                ├── Trec
-                │   ├── <snapshot>_<language>
-                │       ├── <documents split>.trec
-                │       ├── ...
-                │       └── metadata.json
-                └── queries
-                    └── <snapshot>_queries.txt
-        ```
-
-        Args:
-            base_path (Path): Path to the document collection root dir.
-            meta (Optional[LongEvalWebMetadata], optional): Path to the metadata dir if available. Defaults to None.
-            yaml_documentation (str, optional): Documentation file. Defaults to "longeval_web.yaml".
-        """
+        """LongEval 2023 Dataset"""
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
         self.meta = meta
@@ -259,7 +240,7 @@ class LongEvalDataset(Dataset):
 def register():
     base_path = home_path() / NAME
 
-    dlc = DownloadConfig.context(NAME, base_path)
+    dlc = DownloadConfig.context(NAME, base_path, dua=DUA)
 
     # train
     data_path = ZipExtractCache(dlc["train"], base_path).path()

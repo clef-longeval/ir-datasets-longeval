@@ -3,7 +3,7 @@
     "train": {
       "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/3b505342-6bad-48f8-8bc3-d0ae09d3f6e4>.\nTo proceed, symlink the source file here: {path}",
       "cache_path": "longeval-train-v2.tgz",
-      "expected_md5": "c084272b1f666d57469e7ca683342fdf"
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
     },
     "test-docs": {
       "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/ec14adea-815a-4af7-bfd6-a4f67c5e3498>.\nTo proceed, symlink the source file here: {path}",
