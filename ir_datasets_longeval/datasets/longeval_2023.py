@@ -253,7 +253,6 @@ class LongEvalDataset(Dataset):
             ]
         except FileNotFoundError:
             metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
-            print(self.snapshot)
             return metadata[f"longeval-2023/{self.snapshot}"][property]
 
 
