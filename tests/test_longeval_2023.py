@@ -2,6 +2,62 @@ import unittest
 
 from ir_datasets_longeval import load
 
+QRELS_WITHOUT_REL_DOCS_TRAIN = {
+    "q062223622",
+    "q06229033",
+    "q062214218",
+    "q062219081",
+    "q062212442",
+    "q062222125",
+    "q0622724",
+    "q062222134",
+    "q062218529",
+    "q06223898",
+    "q062216451",
+    "q062215377",
+    "q062220780",
+    "q06223848",
+    "q062223487",
+    "q062210081",
+}
+
+QRELS_WITHOUT_REL_DOCS_06 = {"q062210670", "q062211678"}
+
+QRELS_WITHOUT_REL_DOCS_07 = {
+    "q072225489",
+    "q072218431",
+    "q07228384",
+    "q072230061",
+    "q072218166",
+    "q072222808",
+    "q072229184",
+    "q072213055",
+    "q07229243",
+    "q072223034",
+    "q07225568",
+    "q0722830",
+    "q07227743",
+    "q07225832",
+    "q072218365",
+    "q07225582",
+    "q07228597",
+    "q072212233",
+    "q072214484",
+    "q0722351",
+    "q072227978",
+    "q072222467",
+    "q0722806",
+    "q072228421",
+    "q07228502",
+    "q07225054",
+    "q072214898",
+    "q07226955",
+    "q07228983",
+    "q07221244",
+    "q072210371",
+    "q07224489",
+}
+
 
 class TestLongEval2023(unittest.TestCase):
     def test_longeval_2023_train(self):
@@ -49,6 +105,27 @@ class TestLongEval2023(unittest.TestCase):
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
 
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_TRAIN
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
+
     def test_longeval_2023_06(self):
 
         dataset = load("longeval-2023/2022-06/en")
@@ -93,6 +170,27 @@ class TestLongEval2023(unittest.TestCase):
         self.assertEqual(dataset.has_qrels(), True)
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
+
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_06
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
 
     def test_longeval_2023_07(self):
         dataset = load("longeval-2023/2022-07/en")
@@ -139,6 +237,27 @@ class TestLongEval2023(unittest.TestCase):
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
 
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_07
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
+
     def test_longeval_2023_09(self):
         dataset = load("longeval-2023/2022-09/en")
 
@@ -183,6 +302,23 @@ class TestLongEval2023(unittest.TestCase):
         self.assertEqual(dataset.has_qrels(), True)
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
+
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
 
     def test_clef_2023_train_tag(self):
         datasets = load("longeval-2023/clef-2023-train/en")
@@ -278,6 +414,27 @@ class TestLongEval2023Fr(unittest.TestCase):
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
 
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_TRAIN
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
+
     def test_longeval_2023_06(self):
 
         dataset = load("longeval-2023/2022-06/fr")
@@ -322,6 +479,26 @@ class TestLongEval2023Fr(unittest.TestCase):
         self.assertEqual(dataset.has_qrels(), True)
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_06
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
 
     def test_longeval_2023_07(self):
         dataset = load("longeval-2023/2022-07/fr")
@@ -368,6 +545,27 @@ class TestLongEval2023Fr(unittest.TestCase):
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
 
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+        qids_in_qrels.update(
+            QRELS_WITHOUT_REL_DOCS_07
+        )  # add queries without relevant docs back in
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
+
     def test_longeval_2023_09(self):
         dataset = load("longeval-2023/2022-09/fr")
 
@@ -412,6 +610,24 @@ class TestLongEval2023Fr(unittest.TestCase):
         self.assertEqual(dataset.has_qrels(), True)
         self.assertEqual(dataset.has_queries(), True)
         self.assertEqual(dataset.has_docs(), True)
+
+        # test qrels
+        # all queries have judgments
+        # all qids in qrels are in queries
+        qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
+        qids_in_queries = {query.query_id for query in dataset.queries_iter()}
+        self.assertEqual(qids_in_qrels, qids_in_queries)
+
+        # all qids have relevant docs
+        qids_in_qrels = {
+            qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
+        }
+
+        # all docids in qrels are in docs
+        docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
+        for doc_id in docids_in_qrels:
+            self.assertIsNotNone(docs_store.get(doc_id))
+
 
     def test_clef_2023_train_tag(self):
         datasets = load("longeval-2023/clef-2023-train/fr")
