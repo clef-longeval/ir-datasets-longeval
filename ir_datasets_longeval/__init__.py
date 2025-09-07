@@ -71,6 +71,8 @@ def load(longeval_ir_dataset: Union[str]):
 
         if base.startswith("longeval-web"):
             return LongEvalWebDataset(Path(longeval_ir_dataset))
+        elif base.startswith("longeval-2023"):
+            return LongEvalDataset(Path(longeval_ir_dataset))
         return LongEvalSciDataset(Path(longeval_ir_dataset))
 
     if exists_in_irds:
