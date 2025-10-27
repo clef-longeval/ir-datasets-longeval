@@ -93,6 +93,7 @@ class LongEvalSciDataset(Dataset):
         prior_datasets: Optional[List[str]] = None,
         snapshot: Optional[str] = None,
         queries_path: Optional[Path] = None,
+        qrels_path: Optional[Path] = None,
     ):
         """LongEvalSciDataset class
 
@@ -163,13 +164,11 @@ class LongEvalSciDataset(Dataset):
         queries = TsvQueries(ExtractedPath(queries_path))
 
         qrels = None
-        qrels_path = base_path / "qrels.txt"
+        if not qrels_path:
+            qrels_path = base_path / "qrels.txt"
+
         if qrels_path.exists() and qrels_path.is_file():
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
-
-        # BUG: for longeval-sci/2024-11, the basepath from 2024-11/train is provided which contains qrels for 2024-11/train. To temporarily prevent that the wrong queries are loaded we overwrite the qrels here again. This will be fixed with the test qrels release.
-        if snapshot == "2024-11" and queries_path.name == "queries_2024-11_test.txt":
-            qrels = None
 
         super().__init__(docs, queries, qrels, documentation)
         original_iter = self.docs_iter
@@ -276,6 +275,14 @@ def register():
         ).path()
         / "longeval_sci_testing_2025_abstract"
     )
+    qrels_path = (
+        ZipExtractCache(
+            dlc["longeval_sci_testing_qrels_2025"],
+            base_path / "longeval_sci_testing_qrels_2025",
+        ).path()
+        / "longeval_sci_qrels"
+    )
+
     queries_path = data_path / "queries_2024-11_test.txt"
     subsets["2024-11"] = LongEvalSciDataset(
         base_path=data_path_train,
@@ -283,6 +290,7 @@ def register():
         prior_datasets=[subsets["2024-11/train"]],
         snapshot="2024-11",
         queries_path=queries_path,
+        qrels_path=qrels_path / "qrels-longeval-sci-2024-11-test",
     )
 
     queries_path = data_path / "queries_2025-01_test.txt"
@@ -292,6 +300,7 @@ def register():
         prior_datasets=[subsets["2024-11/train"], subsets["2024-11"]],
         snapshot="2025-01",
         queries_path=queries_path,
+        qrels_path=qrels_path / "qrels-longeval-sci-2025-01",
     )
 
     for s in sorted(subsets):
