@@ -33,7 +33,7 @@ class TestLongEvalSci(unittest.TestCase):
         query_ids = [query.query_id for query in dataset.queries_iter()]
         for qrel in dataset.qrels_iter():
             doc = docs_store.get(qrel.doc_id)
-            assert doc.title, f"Referenced document has no title"
+            assert doc.title, "Referenced document has no title"
             assert (
                 qrel.query_id in query_ids
             ), f"Referenced query_id {qrel.query_id} does not exist"
@@ -78,7 +78,7 @@ class TestLongEvalSci(unittest.TestCase):
         query_ids = [query.query_id for query in dataset.queries_iter()]
         for qrel in dataset.qrels_iter():
             doc = docs_store.get(qrel.doc_id)
-            assert doc.title, f"Referenced document has no title"
+            assert doc.title, "Referenced document has no title"
             assert (
                 qrel.query_id in query_ids
             ), f"Referenced query_id {qrel.query_id} does not exist"
