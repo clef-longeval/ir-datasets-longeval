@@ -14,7 +14,7 @@ Extension for accessing the [LongEval](https://clef-longeval.github.io/) dataset
 
 ## Installation
 
-Install the package from PyPI:
+Install the package from [PyPI](https://pypi.org/project/ir-datasets-longeval/):
 
 ```shell
 pip install ir-datasets-longeval
