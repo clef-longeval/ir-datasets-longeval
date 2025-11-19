@@ -1,8 +1,6 @@
-import unittest
 from datetime import datetime
 
 import pytest
-from parameterized import parameterized, parameterized_class
 
 from ir_datasets_longeval import load
 

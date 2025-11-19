@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import gzip
 import json
@@ -139,7 +141,7 @@ class LongEvalDocs(TrecDocs):
             path = f"{self._dlc.path()}/docstore-unified.pklz4"
         else:
             path = f"{self._dlc.path()}/docstore.pklz4"
-            
+
         return PickleLz4FullStore(
             path=path,
             init_iter_fn=self.docs_iter,
@@ -195,7 +197,7 @@ class LongEvalDataset(Dataset):
         base_path: Path,
         meta: Optional[LongEvalMetadata] = None,
         yaml_documentation: str = "longeval_2023.yaml",
-        prior_datasets: Optional[List[str]] = None,
+        prior_datasets: Optional[List[LongEvalDataset]] = None,
         snapshot: Optional[str] = None,
         lang: str = "en",
         query_id_map: Optional[Dict[str, str]] = None,
@@ -262,7 +264,10 @@ class LongEvalDataset(Dataset):
             / "longeval-relevance-judgements"
             / "b-long-september.txt",
         }
-        qrels_path = qrels_path_map.get(self.snapshot)
+        qrels_path = qrels_path_map.get(
+            self.snapshot, base_path.parent / "French" / "Qrels" / "qrels.txt"
+        )
+
         qrels = None
         if qrels_path.exists() and qrels_path.is_file():
             qrels = LongEvalQrels(
@@ -328,7 +333,7 @@ def prepare_subsets(
 
     # Desired structure: longeval/2023-07/en/
 
-    subsets = {}
+    subsets: Dict[str, LongEvalDataset] = {}
     subsets[f"2022-06-train/{lang}"] = LongEvalDataset(
         prior_datasets=list(subsets.values())[::-1],
         base_path=base_path_train,
@@ -382,28 +387,27 @@ def register_subsets(
 ):
     """Register all datasets of a language and unification type."""
     if not unified:
-        unified = "/non-unified"
+        unified_key = "/non-unified"
     else:
-        unified = ""
+        unified_key = ""
 
-    if f"{NAME}/*/{lang}{unified}" in registry:
+    if f"{NAME}/*/{lang}{unified_key}" in registry:
         return
 
     for s in sorted(subsets):
-        registry.register(f"{NAME}/{s}{unified}", subsets[s])
+        registry.register(f"{NAME}/{s}{unified_key}", subsets[s])
+    registry.register(f"{NAME}/*/{lang}{unified_key}", MetaDataset(list(subsets.values())))
 
-    registry.register(f"{NAME}/*/{lang}{unified}", MetaDataset(list(subsets.values())))
-
-    if f"{NAME}/clef-2023/{lang}{unified}" in registry:
+    if f"{NAME}/clef-2023/{lang}{unified_key}" in registry:
         return
 
     registry.register(
-        f"{NAME}/clef-2023/{lang}{unified}",
+        f"{NAME}/clef-2023/{lang}{unified_key}",
         MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TEST]),
     )
 
     registry.register(
-        f"{NAME}/clef-2023-train/{lang}{unified}",
+        f"{NAME}/clef-2023-train/{lang}{unified_key}",
         MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TRAIN]),
     )
 
