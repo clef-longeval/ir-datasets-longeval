@@ -1,13 +1,40 @@
 {
+  "longeval-2023": {
+    "id-maps": {
+      "url": "https://th-koeln.sciebo.de/s/KT74aPpaHLJzGgR/download/longeval-2023-id-maps.zip",
+      "cache_path": "longeval-2023-id-maps.zip"
+    },
+    "train": {
+      "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/3b505342-6bad-48f8-8bc3-d0ae09d3f6e4>.\nTo proceed, symlink the source file here: {path}",
+      "cache_path": "longeval-train-v2.tgz",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test-docs": {
+      "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/ec14adea-815a-4af7-bfd6-a4f67c5e3498>.\nTo proceed, symlink the source file here: {path}",
+      "cache_path": "longeval-train-v2.tgz",
+      "expected_md5": "c084272b1f666d57469e7ca683342fdf"
+    },
+    "test-qrels": {
+      "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/f0aaece7-0434-4d0d-aa20-9b14a51e0a46>.\nTo proceed, symlink the source file here: {path}",
+      "cache_path": "longeval-relevance-judgements.zip",
+      "expected_md5": "2d95047a282c311e86927e99c05704b6"
+    }
+  },
   "longeval-web": {
     "longeval_2025_train_collection": {
       "url": "https://researchdata.tuwien.ac.at/records/th5h0-g5f51/files/Longeval_2025_Train_Collection_p1.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcwM2Y4MzQ0LTFlMDEtNDYxNy1iNDc4LTI5MmQ5MzYwNTU3NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NjYxMWFkODQzNDk2ZDk0NzllMDNlOWIyYWM1Zjc4NCJ9.YhnRV6WzWfQiuLQcGyTrA3gyI_5UBe9rtUAV6qKk5U7tqGEmD4NUdyfjGo2-U7tnBIlD7iTwUUDi0nw3GcXPmA",
       "cache_path": "Longeval_2025_Train_Collection_p1.zip"
     },
+
     "longeval_2025_test_collection": {
-      "url": "https://researchdata.tuwien.ac.at/records/th5h0-g5f51/files/LongEval_Web_2025_Test_Collection.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcwM2Y4MzQ0LTFlMDEtNDYxNy1iNDc4LTI5MmQ5MzYwNTU3NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NjYxMWFkODQzNDk2ZDk0NzllMDNlOWIyYWM1Zjc4NCJ9.YhnRV6WzWfQiuLQcGyTrA3gyI_5UBe9rtUAV6qKk5U7tqGEmD4NUdyfjGo2-U7tnBIlD7iTwUUDi0nw3GcXPmA"
+      "url": "https://researchdata.tuwien.ac.at/records/th5h0-g5f51/files/LongEval_Web_2025_Test_Collection.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcwM2Y4MzQ0LTFlMDEtNDYxNy1iNDc4LTI5MmQ5MzYwNTU3NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NjYxMWFkODQzNDk2ZDk0NzllMDNlOWIyYWM1Zjc4NCJ9.YhnRV6WzWfQiuLQcGyTrA3gyI_5UBe9rtUAV6qKk5U7tqGEmD4NUdyfjGo2-U7tnBIlD7iTwUUDi0nw3GcXPmA",
+      "cache_path": "LongEval_Web_2025_Test_Collection.zip"
     },
-    "cache_path": "LongEval_Web_2025_Test_Collection.zip"
+
+    "longeval_2025_web_test_qrels": {
+      "url": "https://researchdata.tuwien.ac.at/records/th5h0-g5f51/files/longeval_web_test_qrels.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcwM2Y4MzQ0LTFlMDEtNDYxNy1iNDc4LTI5MmQ5MzYwNTU3NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NjYxMWFkODQzNDk2ZDk0NzllMDNlOWIyYWM1Zjc4NCJ9.YhnRV6WzWfQiuLQcGyTrA3gyI_5UBe9rtUAV6qKk5U7tqGEmD4NUdyfjGo2-U7tnBIlD7iTwUUDi0nw3GcXPmA",
+      "cache_path": "longeval_web_test_qrels.zip"
+    }
   },
   "longeval-sci": {
     "longeval_sci_training_2025": {
