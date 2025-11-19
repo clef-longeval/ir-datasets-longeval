@@ -1,9 +1,10 @@
 import contextlib
+import gzip
 import json
 from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
-from typing import List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional
 
 import ir_datasets
 from ir_datasets import registry
@@ -61,6 +62,28 @@ class LongEvalMetadata:
         return self.metadata.get(str(id))
 
 
+class LongEvalQuery(NamedTuple):
+    query_id: str
+    text: str
+
+    def default_text(self):
+        return self.text
+
+
+class LongEvalQueries(TsvQueries):
+    def __init__(self, dlc, lang=None, query_id_map=None):
+        super().__init__(dlc, query_cls=LongEvalQuery, lang=lang)
+        self.query_id_map = query_id_map
+
+    def queries_iter(self):
+        if self.query_id_map:
+            for query in super().queries_iter():
+                query_id = self.query_id_map.get(query.query_id)
+                yield LongEvalQuery(query_id, query.text)
+        else:
+            yield from super().queries_iter()
+
+
 class LongEvalDocument(NamedTuple):
     doc_id: str
     # original_doc_id: str
@@ -72,9 +95,10 @@ class LongEvalDocument(NamedTuple):
 
 
 class LongEvalDocs(TrecDocs):
-    def __init__(self, dlc, meta=None):
+    def __init__(self, dlc, meta=None, doc_id_map=None):
         self._dlc = dlc
         self._meta = meta
+        self.doc_id_map = doc_id_map
         super().__init__(self._dlc)
 
     @ir_datasets.util.use_docstore
@@ -83,10 +107,13 @@ class LongEvalDocs(TrecDocs):
             if isinstance(doc, LongEvalDocument):
                 yield doc
             else:
-                docid = doc.doc_id
+                if self.doc_id_map:
+                    docid = self.doc_id_map.get(doc.doc_id)
+                else:
+                    docid = doc.doc_id
                 text = doc.text
                 if self._meta:
-                    metadata = self._meta.get_metadata(docid)
+                    metadata = self._meta.get_metadata(doc.doc_id)
                     url = metadata.url
                 else:
                     url = ""
@@ -108,8 +135,13 @@ class LongEvalDocs(TrecDocs):
                 yield from self._docs_iter(child)
 
     def docs_store(self):
+        if self.doc_id_map:
+            path = f"{self._dlc.path()}/docstore-unified.pklz4"
+        else:
+            path = f"{self._dlc.path()}/docstore.pklz4"
+            
         return PickleLz4FullStore(
-            path=f"{self._dlc.path()}/docstore.pklz4",
+            path=path,
             init_iter_fn=self.docs_iter,
             data_cls=self.docs_cls(),
             lookup_field="doc_id",
@@ -118,6 +150,28 @@ class LongEvalDocs(TrecDocs):
 
     def docs_cls(self):
         return LongEvalDocument
+
+
+class LongEvalQrel(NamedTuple):
+    query_id: str
+    doc_id: str
+    relevance: int
+
+
+class LongEvalQrels(TrecQrels):
+    def __init__(self, dlc, qrels_defs=None, query_id_map=None, doc_id_map=None):
+        self.query_id_map = query_id_map
+        self.doc_id_map = doc_id_map
+        super().__init__(dlc, qrels_defs=qrels_defs)
+
+    def qrels_iter(self):
+        for qrel in super().qrels_iter():
+            if self.query_id_map and self.doc_id_map:
+                query_id = self.query_id_map.get(qrel.query_id)
+                doc_id = self.doc_id_map.get(qrel.doc_id)
+                yield LongEvalQrel(query_id, doc_id, qrel.relevance)
+            else:
+                yield LongEvalQrel(qrel.query_id, qrel.doc_id, qrel.relevance)
 
 
 class ExtractedPath:
@@ -144,6 +198,8 @@ class LongEvalDataset(Dataset):
         prior_datasets: Optional[List[str]] = None,
         snapshot: Optional[str] = None,
         lang: str = "en",
+        query_id_map: Optional[Dict[str, str]] = None,
+        doc_id_map: Optional[Dict[str, str]] = None,
     ):
         """LongEval 2023 Dataset"""
         documentation = YamlDocumentation(yaml_documentation)
@@ -167,7 +223,13 @@ class LongEvalDataset(Dataset):
             prior_datasets = self.read_property_from_metadata("prior-datasets")
         self.prior_datasets = prior_datasets
 
-        docs = LongEvalDocs(ExtractedPath(base_path / "Documents" / "Trec"), meta)
+        # docs = LongEvalDocs(ExtractedPath(base_path / "Documents" / "Trec"), meta)
+        docs = LongEvalDocs(
+            ExtractedPath(base_path / "Documents" / "Trec"),
+            meta,
+            doc_id_map=doc_id_map,
+        )
+
         query_name_map = {
             "2022-06-train": "train.tsv",
             "2022-06": "heldout.tsv",
@@ -180,7 +242,12 @@ class LongEvalDataset(Dataset):
             raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
             )
-        queries = TsvQueries(ExtractedPath(queries_path), lang=self.lang)
+        # queries = TsvQueries(ExtractedPath(queries_path), lang=self.lang)
+        queries = LongEvalQueries(
+            ExtractedPath(queries_path),
+            lang=self.lang,
+            query_id_map=query_id_map,
+        )
 
         qrels_path_map = {
             "2022-06-train": base_path.parent / "French" / "Qrels" / "train.txt",
@@ -198,7 +265,12 @@ class LongEvalDataset(Dataset):
         qrels_path = qrels_path_map.get(self.snapshot)
         qrels = None
         if qrels_path.exists() and qrels_path.is_file():
-            qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
+            qrels = LongEvalQrels(
+                ExtractedPath(qrels_path),
+                QREL_DEFS,
+                query_id_map=query_id_map,
+                doc_id_map=doc_id_map,
+            )
         else:
             print("Missing qrels_path:", qrels_path)
 
@@ -237,84 +309,140 @@ class LongEvalDataset(Dataset):
             return metadata[f"longeval-2023/{self.snapshot}"][property]
 
 
+def prepare_subsets(
+    language: str,
+    data_path: Path,
+    base_path_test: Path,
+    query_id_map: Optional[Dict[str, str]] = None,
+    doc_id_map: Optional[Dict[str, str]] = None,
+):
+    """Prepare all subsets of a given language."""
+
+    lang = "en" if language == "English" else "fr"
+
+    meta = LongEvalMetadata(
+        data_path / "2023_train" / "publish" / "French" / "urls.txt"
+    )
+
+    base_path_train = data_path / "2023_train" / "publish" / language
+
+    # Desired structure: longeval/2023-07/en/
+
+    subsets = {}
+    subsets[f"2022-06-train/{lang}"] = LongEvalDataset(
+        prior_datasets=list(subsets.values())[::-1],
+        base_path=base_path_train,
+        snapshot="2022-06-train",
+        meta=meta,
+        lang=lang,
+        query_id_map=query_id_map,
+        doc_id_map=doc_id_map,
+    )
+    subsets[f"2022-06/{lang}"] = LongEvalDataset(
+        prior_datasets=list(subsets.values())[::-1],
+        base_path=base_path_train,
+        snapshot="2022-06",
+        meta=meta,
+        lang=lang,
+        query_id_map=query_id_map,
+        doc_id_map=doc_id_map,
+    )
+
+    meta = LongEvalMetadata(
+        base_path_test / "A-Short-July" / "French" / "Documents" / "urls.txt"
+    )
+
+    subsets[f"2022-07/{lang}"] = LongEvalDataset(
+        prior_datasets=list(subsets.values())[::-1],
+        base_path=base_path_test / "A-Short-July" / language,
+        snapshot="2022-07",
+        meta=meta,
+        lang=lang,
+        query_id_map=query_id_map,
+        doc_id_map=doc_id_map,
+    )
+
+    meta = LongEvalMetadata(
+        base_path_test / "B-Long-September" / "French" / "Documents" / "urls.txt"
+    )
+    subsets[f"2022-09/{lang}"] = LongEvalDataset(
+        prior_datasets=list(subsets.values())[::-1],
+        base_path=base_path_test / "B-Long-September" / language,
+        snapshot="2022-09",
+        meta=meta,
+        lang=lang,
+        query_id_map=query_id_map,
+        doc_id_map=doc_id_map,
+    )
+    return subsets
+
+
+def register_subsets(
+    lang: str, subsets: Dict[str, LongEvalDataset], unified: bool = False
+):
+    """Register all datasets of a language and unification type."""
+    if not unified:
+        unified = "/non-unified"
+    else:
+        unified = ""
+
+    if f"{NAME}/*/{lang}{unified}" in registry:
+        return
+
+    for s in sorted(subsets):
+        registry.register(f"{NAME}/{s}{unified}", subsets[s])
+
+    registry.register(f"{NAME}/*/{lang}{unified}", MetaDataset(list(subsets.values())))
+
+    if f"{NAME}/clef-2023/{lang}{unified}" in registry:
+        return
+
+    registry.register(
+        f"{NAME}/clef-2023/{lang}{unified}",
+        MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TEST]),
+    )
+
+    registry.register(
+        f"{NAME}/clef-2023-train/{lang}{unified}",
+        MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TRAIN]),
+    )
+
+
 def register():
     base_path = home_path() / NAME
 
     dlc = DownloadConfig.context(NAME, base_path, dua=DUA)
 
-    # train
-    data_path = ZipExtractCache(dlc["train"], base_path).path()
+    id_maps = ZipExtractCache(dlc["id-maps"], base_path / "id-maps").path()  # ID maps
+    data_path = ZipExtractCache(dlc["train"], base_path).path()  # train data
+    base_path_test = data_path / "2023_test" / "test-collection"  # test data
 
+    # Register non-unified datasets
     for language in ["English", "French"]:
+        subsets = prepare_subsets(language, data_path, base_path_test)
         lang = "en" if language == "English" else "fr"
 
-        meta = LongEvalMetadata(
-            data_path / "2023_train" / "publish" / "French" / "urls.txt"
+        register_subsets(lang, subsets, unified=False)
+
+    # Register unified datasets
+    # load mapping
+    with gzip.open(
+        id_maps / "longeval-2023-query-id-map.json.gz",
+        "rt",
+        encoding="utf-8",
+    ) as f:
+        query_id_map = json.load(f)
+
+    with gzip.open(
+        id_maps / "longeval-2023-doc-id-map.json.gz",
+        "rt",
+        encoding="utf-8",
+    ) as f:
+        doc_id_map = json.load(f)
+
+    for language in ["English", "French"]:
+        subsets = prepare_subsets(
+            language, data_path, base_path_test, query_id_map, doc_id_map
         )
-
-        base_path_train = data_path / "2023_train" / "publish" / language
-
-        # Desired structure: longeval/2023-07/en/
-
-        subsets = {}
-        subsets[f"2022-06-train/{lang}"] = LongEvalDataset(
-            prior_datasets=list(subsets.values())[::-1],
-            base_path=base_path_train,
-            snapshot="2022-06-train",
-            meta=meta,
-            lang=lang,
-        )
-        subsets[f"2022-06/{lang}"] = LongEvalDataset(
-            prior_datasets=list(subsets.values())[::-1],
-            base_path=base_path_train,
-            snapshot="2022-06",
-            meta=meta,
-            lang=lang,
-        )
-
-        # test data
-        base_path_test = data_path / "2023_test" / "test-collection"
-
-        meta = LongEvalMetadata(
-            base_path_test / "A-Short-July" / "French" / "Documents" / "urls.txt"
-        )
-
-        subsets[f"2022-07/{lang}"] = LongEvalDataset(
-            prior_datasets=list(subsets.values())[::-1],
-            base_path=base_path_test / "A-Short-July" / "English",
-            snapshot="2022-07",
-            meta=meta,
-            lang=lang,
-        )
-
-        meta = LongEvalMetadata(
-            base_path_test / "B-Long-September" / "French" / "Documents" / "urls.txt"
-        )
-        subsets[f"2022-09/{lang}"] = LongEvalDataset(
-            prior_datasets=list(subsets.values())[::-1],
-            base_path=base_path_test / "B-Long-September" / "English",
-            snapshot="2022-09",
-            meta=meta,
-            lang=lang,
-        )
-
-        if f"{NAME}/*/{lang}" in registry:
-            return
-
-        for s in sorted(subsets):
-            registry.register(f"{NAME}/{s}", subsets[s])
-
-        registry.register(f"{NAME}/*/{lang}", MetaDataset(list(subsets.values())))
-
-        if f"{NAME}/clef-2023-test/{lang}" in registry:
-            return
-
-        registry.register(
-            f"{NAME}/clef-2023-test/{lang}",
-            MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TEST]),
-        )
-
-        registry.register(
-            f"{NAME}/clef-2023-train/{lang}",
-            MetaDataset([subsets[f"{s}/{lang}"] for s in SUB_COLLECTIONS_TRAIN]),
-        )
+        lang = "en" if language == "English" else "fr"
+        register_subsets(lang, subsets, unified=True)
