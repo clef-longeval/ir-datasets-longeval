@@ -23,4 +23,4 @@ class _DownloadConfig(_IrdsDownloadConfig):
         return self._contents
 
 
-DownloadConfig = _DownloadConfig(file="downloads.json")
+DownloadConfig = _DownloadConfig(file="etc/downloads.json")

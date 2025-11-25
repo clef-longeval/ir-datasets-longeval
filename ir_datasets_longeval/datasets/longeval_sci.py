@@ -193,9 +193,11 @@ class LongEvalSciDataset(Dataset):
 
     def read_property_from_metadata(self, property):
         try:
-            return json.load(open(self.base_path / "metadata.json", "r"))[property]
+            return json.load(open(self.base_path / "etc" / "metadata.json", "r"))[
+                property
+            ]
         except FileNotFoundError:
-            metadata = json.loads(get_data("ir_datasets_longeval", "metadata.json"))
+            metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
             return metadata[f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"][
                 property
             ]
