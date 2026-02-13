@@ -197,14 +197,62 @@ class LongEvalSciDataset(Dataset):
 
     def read_property_from_metadata(self, property):
         try:
-            return json.load(open(self.base_path / "etc" / "metadata.json", "r"))[
-                property
-            ]
+            return json.load(open(self.base_path / "metadata.json", "r"))[property]
         except FileNotFoundError:
             metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
-            return metadata[f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"][
+            return metadata[f"longeval-sci/{self.timestamp.strftime('%Y-%m')}"][
                 property
             ]
+
+
+from shutil import copyfile
+
+
+def register_spot_check_datasets():
+    if f"{NAME}/spot-check/no-prior-data" in registry:
+        return
+
+    base_path = home_path() / NAME / "spot-check"
+    dlc = DownloadConfig.context(NAME, base_path)
+
+    def extract_from_tira(name):
+        return ZipExtractCache(dlc[name], base_path / name).path()
+
+    no_prior_data_inputs = extract_from_tira(
+        "sci-spot-check-no-prior-data-20260210-training-inputs"
+    )
+    with_prior_data_inputs = extract_from_tira(
+        "sci-spot-check-with-prior-data-20260210-training-inputs"
+    )
+    no_prior_data_truths = extract_from_tira(
+        "sci-spot-check-no-prior-data-20260210-training-truths"
+    )
+    with_prior_data_truths = extract_from_tira(
+        "sci-spot-check-with-prior-data-20260210-training-truths"
+    )
+
+    if not (no_prior_data_inputs / "qrels.txt").exists():
+        copyfile(no_prior_data_truths / "qrels.txt", no_prior_data_inputs / "qrels.txt")
+
+    if not (with_prior_data_inputs / "qrels.txt").exists():
+        copyfile(
+            with_prior_data_truths / "qrels.txt", with_prior_data_inputs / "qrels.txt"
+        )
+
+    no_prior = LongEvalSciDataset(
+        no_prior_data_inputs,
+        snapshot="03-05",
+        qrels_path=no_prior_data_inputs / "qrels.txt",
+    )
+    prior_data = LongEvalSciDataset(
+        with_prior_data_inputs,
+        snapshot="03-05",
+        qrels_path=with_prior_data_inputs / "qrels.txt",
+    )
+
+    registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
+    registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
+    registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
 
 
 def register():
@@ -318,18 +366,18 @@ def register():
     )
 
     ### Meta datasets
-    if f"{NAME}/clef-2026-test" in registry:
+    if f"{NAME}/clef-2026" in registry:
         return
     registry.register(
-        f"{NAME}/clef-2026-test",
+        f"{NAME}/clef-2026",
         MetaDataset([subsets["03-05"], subsets["06-08"], subsets["09-11"]]),
     )
     registry.register(
-        f"{NAME}/clef-2026-test/raw",
+        f"{NAME}/clef-2026/raw",
         MetaDataset([subsets["03-05/raw"], subsets["06-08/raw"], subsets["09-11/raw"]]),
     )
     registry.register(
-        f"{NAME}/clef-2026-test/dctr",
+        f"{NAME}/clef-2026/dctr",
         MetaDataset(
             [subsets["03-05/dctr"], subsets["06-08/dctr"], subsets["09-11/dctr"]]
         ),
