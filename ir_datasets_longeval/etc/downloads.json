@@ -72,7 +72,7 @@
     "longeval_sci_2026": {
       "description": "tbd",
       "cache_path": "longeval-sci-2026",
-      "instructions": "To use this dataset, you need to request the source files from the Lindat here: <https://lindat.mff.cuni.cz/repository/items/3b505342-6bad-48f8-8bc3-d0ae09d3f6e4>.\nTo proceed, symlink the source file here: {path}"
+      "instructions": "tbd"
     }
   }
 }

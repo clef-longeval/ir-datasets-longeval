@@ -20,116 +20,146 @@ class TestLongEval2023Snapshot:
                 "n_queries": 100,
                 "expected_queries": {"e54f68f74633d43b86d0247af6197544": "mark twain"},
                 "n_qrels": 0,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             {
                 "snapshot": "03-05-train/raw",
                 "n_queries": 100,
                 "expected_queries": {"e54f68f74633d43b86d0247af6197544": "mark twain"},
-                "n_qrels": 5253,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 1336,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             {
                 "snapshot": "03-05-train/dctr",
                 "n_queries": 100,
                 "expected_queries": {"e54f68f74633d43b86d0247af6197544": "mark twain"},
-                "n_qrels": 14960,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 10406,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             ## 03-05
             {
                 "snapshot": "03-05",
-                "n_queries": 315,
+                "n_queries": 1525,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
                 "n_qrels": 0,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             {
-                "snapshot": "03-05/raw",
-                "n_queries": 315,
+                "snapshot": "03-05/judged",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 10045,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 0,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             {
-                "snapshot": "03-05/dctr",
-                "n_queries": 315,
+                "snapshot": "03-05/judged/raw",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 19366,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 3037,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
+                "prior_snapshots": [],
+            },
+            {
+                "snapshot": "03-05/judged/dctr",
+                "n_queries": 338,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 24080,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": [],
             },
             ## 06-09
             {
                 "snapshot": "06-08",
-                "n_queries": 315,
+                "n_queries": 1525,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
                 "n_qrels": 0,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["03-05"],
             },
             {
-                "snapshot": "06-08/raw",
-                "n_queries": 315,
+                "snapshot": "06-08/judged",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 27207,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 0,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["03-05"],
             },
             {
-                "snapshot": "06-08/dctr",
-                "n_queries": 315,
+                "snapshot": "06-08/judged/raw",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 17563,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 3371,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
+                "prior_snapshots": ["03-05"],
+            },
+            {
+                "snapshot": "06-08/judged/dctr",
+                "n_queries": 338,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 18832,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["03-05"],
             },
             ## 09-11
             {
                 "snapshot": "09-11",
-                "n_queries": 315,
+                "n_queries": 1525,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
                 "n_qrels": 0,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["06-08", "03-05"],
             },
             {
-                "snapshot": "09-11/raw",
-                "n_queries": 315,
+                "snapshot": "09-11/judged",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 104498,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 0,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["06-08", "03-05"],
             },
             {
-                "snapshot": "09-11/dctr",
-                "n_queries": 315,
+                "snapshot": "09-11/judged/raw",
+                "n_queries": 338,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
-                "n_qrels": 9374,
-                "expected_docs": {"40693434": "An Example of a Mansion in Tokat"},
+                "n_qrels": 2244,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
+                "prior_snapshots": ["06-08", "03-05"],
+            },
+            {
+                "snapshot": "09-11/judged/dctr",
+                "n_queries": 338,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 11338,
+                "expected_docs": {"10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"},
                 "prior_snapshots": ["06-08", "03-05"],
             },
         ],

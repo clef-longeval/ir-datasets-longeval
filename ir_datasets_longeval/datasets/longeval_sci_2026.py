@@ -92,6 +92,7 @@ class LongEvalSciDataset(Dataset):
         prior_datasets: Optional[List[str]] = None,
         snapshot: Optional[str] = None,
         qrels_path: Optional[Path] = None,
+        queries_path: Optional[Path] = None,
     ):
         """LongEvalSciDataset class
 
@@ -101,6 +102,8 @@ class LongEvalSciDataset(Dataset):
             timestamp (Optional[str], optional): Timestamp in the YYYY-MM format of the snapshot. Defaults to None.
             prior_datasets (Optional[List[str]], optional): List of all snapshot that come before this snapshot. Defaults to None.
             snapshot (Optional[str], optional): Name of the sub-collection. This was previously also referred to as lag and is most likely similar to the dataset_id. Defaults to None.
+            qrels_path (Optional[Path], optional): Path to the qrels file. Defaults to None.
+            queries_path (Optional[Path], optional): Path to the queries file. Defaults to None.
         """
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -152,10 +155,15 @@ class LongEvalSciDataset(Dataset):
             mapping=MAPPING,
         )
 
-        if "train" in snapshot:
-            queries = TsvQueries(ExtractedPath(base_path / "queries-train.tsv"))
-        else:
-            queries = TsvQueries(ExtractedPath(base_path / "queries-test.tsv"))
+        if not queries_path:
+            queries_path = base_path / "queries-test.tsv"
+
+        if not queries_path.exists() or not queries_path.is_file():
+            raise FileNotFoundError(
+                f"I expected that the file {queries_path} exists. But the directory does not exist."
+            )
+
+        queries = TsvQueries(ExtractedPath(queries_path))
 
         qrels = None
         if qrels_path is not None and qrels_path.exists() and qrels_path.is_file():
@@ -205,56 +213,6 @@ class LongEvalSciDataset(Dataset):
             ]
 
 
-from shutil import copyfile
-
-
-def register_spot_check_datasets():
-    if f"{NAME}/spot-check/no-prior-data" in registry:
-        return
-
-    base_path = home_path() / NAME / "spot-check"
-    dlc = DownloadConfig.context(NAME, base_path)
-
-    def extract_from_tira(name):
-        return ZipExtractCache(dlc[name], base_path / name).path()
-
-    no_prior_data_inputs = extract_from_tira(
-        "sci-spot-check-no-prior-data-20260210-training-inputs"
-    )
-    with_prior_data_inputs = extract_from_tira(
-        "sci-spot-check-with-prior-data-20260210-training-inputs"
-    )
-    no_prior_data_truths = extract_from_tira(
-        "sci-spot-check-no-prior-data-20260210-training-truths"
-    )
-    with_prior_data_truths = extract_from_tira(
-        "sci-spot-check-with-prior-data-20260210-training-truths"
-    )
-
-    if not (no_prior_data_inputs / "qrels.txt").exists():
-        copyfile(no_prior_data_truths / "qrels.txt", no_prior_data_inputs / "qrels.txt")
-
-    if not (with_prior_data_inputs / "qrels.txt").exists():
-        copyfile(
-            with_prior_data_truths / "qrels.txt", with_prior_data_inputs / "qrels.txt"
-        )
-
-    no_prior = LongEvalSciDataset(
-        no_prior_data_inputs,
-        snapshot="03-05",
-        qrels_path=no_prior_data_inputs / "qrels.txt",
-    )
-    prior_data = LongEvalSciDataset(
-        with_prior_data_inputs,
-        snapshot="03-05",
-        qrels_path=with_prior_data_inputs / "qrels.txt",
-    )
-
-    registry.register(f"{NAME}/spot-check/no-prior-data", no_prior)
-    registry.register(f"{NAME}/spot-check/with-prior-data", prior_data)
-    registry.register(f"{NAME}/spot-check/*", MetaDataset([no_prior, prior_data]))
-
-
 def register():
     if f"{NAME}/03-05" in registry:
         # Already registered.
@@ -272,6 +230,7 @@ def register():
         timestamp="2025-03",
         prior_datasets=[],
         snapshot="03-05-train",
+        queries_path=data_path / "queries-train.tsv",
     )
     subsets["03-05-train/raw"] = LongEvalSciDataset(
         base_path=data_path,
@@ -279,6 +238,7 @@ def register():
         prior_datasets=[],
         snapshot="03-05-train",
         qrels_path=data_path / "03-05" / "qrels-snapshot-train-raw.txt",
+        queries_path=data_path / "queries-train.tsv",
     )
     subsets["03-05-train/dctr"] = LongEvalSciDataset(
         base_path=data_path,
@@ -286,6 +246,7 @@ def register():
         prior_datasets=[],
         snapshot="03-05-train",
         qrels_path=data_path / "03-05" / "qrels-snapshot-train-dctr.txt",
+        queries_path=data_path / "queries-train.tsv",
     )
 
     # 2026 test
@@ -297,20 +258,6 @@ def register():
         prior_datasets=[],
         snapshot="03-05",
     )
-    subsets["03-05/raw"] = LongEvalSciDataset(
-        base_path=data_path,
-        timestamp="2025-03",
-        prior_datasets=[],
-        snapshot="03-05",
-        qrels_path=data_path / "03-05" / "qrels-snapshot-1-raw.txt",
-    )
-    subsets["03-05/dctr"] = LongEvalSciDataset(
-        base_path=data_path,
-        timestamp="2025-03",
-        prior_datasets=[],
-        snapshot="03-05",
-        qrels_path=data_path / "03-05" / "qrels-snapshot-1-dctr.txt",
-    )
 
     ### 06-08
     subsets["06-08"] = LongEvalSciDataset(
@@ -319,41 +266,90 @@ def register():
         prior_datasets=[subsets["03-05"]],
         snapshot="06-08",
     )
-    subsets["06-08/raw"] = LongEvalSciDataset(
-        base_path=data_path,
-        timestamp="2025-06",
-        prior_datasets=[subsets["03-05/raw"]],
-        snapshot="06-08",
-        qrels_path=data_path / "06-08" / "qrels-snapshot-2-raw.txt",
-    )
-    subsets["06-08/dctr"] = LongEvalSciDataset(
-        base_path=data_path,
-        timestamp="2025-06",
-        prior_datasets=[subsets["03-05/dctr"]],
-        snapshot="06-08",
-        qrels_path=data_path / "06-08" / "qrels-snapshot-2-dctr.txt",
-    )
 
     ### 09-11
     subsets["09-11"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
-        prior_datasets=[subsets["06-08/raw"], subsets["03-05/raw"]],
+        prior_datasets=[subsets["06-08"], subsets["03-05"]],
         snapshot="09-11",
     )
-    subsets["09-11/raw"] = LongEvalSciDataset(
+
+    # 2026 test judged
+
+    ### 03-05
+    subsets["03-05/judged"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="03-05",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+    subsets["03-05/judged/raw"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="03-05",
+        qrels_path=data_path / "03-05" / "qrels-snapshot-1-raw.txt",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+    subsets["03-05/judged/dctr"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="03-05",
+        qrels_path=data_path / "03-05" / "qrels-snapshot-1-dctr.txt",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+
+    ### 06-08
+    subsets["06-08/judged"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["03-05/judged"]],
+        snapshot="06-08",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+    subsets["06-08/judged/raw"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["03-05/judged/raw"]],
+        snapshot="06-08",
+        qrels_path=data_path / "06-08" / "qrels-snapshot-2-raw.txt",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+    subsets["06-08/judged/dctr"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["03-05/judged/dctr"]],
+        snapshot="06-08",
+        qrels_path=data_path / "06-08" / "qrels-snapshot-2-dctr.txt",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+
+    ### 09-11
+    subsets["09-11/judged"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
-        prior_datasets=[subsets["06-08/raw"], subsets["03-05/raw"]],
+        prior_datasets=[subsets["06-08/judged/raw"], subsets["03-05/judged/raw"]],
+        snapshot="09-11",
+        queries_path=data_path / "queries-judged.tsv",
+    )
+    subsets["09-11/judged/raw"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[subsets["06-08/judged/raw"], subsets["03-05/judged/raw"]],
         snapshot="09-11",
         qrels_path=data_path / "09-11" / "qrels-snapshot-3-raw.txt",
+        queries_path=data_path / "queries-judged.tsv",
     )
-    subsets["09-11/dctr"] = LongEvalSciDataset(
+    subsets["09-11/judged/dctr"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
-        prior_datasets=[subsets["06-08/dctr"], subsets["03-05/dctr"]],
+        prior_datasets=[subsets["06-08/judged/dctr"], subsets["03-05/judged/dctr"]],
         snapshot="09-11",
         qrels_path=data_path / "09-11" / "qrels-snapshot-3-dctr.txt",
+        queries_path=data_path / "queries-judged.tsv",
     )
 
     for s in sorted(subsets):
@@ -364,21 +360,41 @@ def register():
     registry.register(
         f"{NAME}/*", MetaDataset([subsets["03-05"], subsets["06-08"], subsets["09-11"]])
     )
+    if f"{NAME}/judged/*" in registry:
+        return
+    registry.register(
+        f"{NAME}/judged/*",
+        MetaDataset(
+            [subsets["03-05/judged"], subsets["06-08/judged"], subsets["09-11/judged"]]
+        ),
+    )
 
     ### Meta datasets
     if f"{NAME}/clef-2026" in registry:
         return
     registry.register(
         f"{NAME}/clef-2026",
-        MetaDataset([subsets["03-05"], subsets["06-08"], subsets["09-11"]]),
+        MetaDataset(
+            [subsets["03-05/judged"], subsets["06-08/judged"], subsets["09-11/judged"]]
+        ),
     )
     registry.register(
         f"{NAME}/clef-2026/raw",
-        MetaDataset([subsets["03-05/raw"], subsets["06-08/raw"], subsets["09-11/raw"]]),
+        MetaDataset(
+            [
+                subsets["03-05/judged/raw"],
+                subsets["06-08/judged/raw"],
+                subsets["09-11/judged/raw"],
+            ]
+        ),
     )
     registry.register(
         f"{NAME}/clef-2026/dctr",
         MetaDataset(
-            [subsets["03-05/dctr"], subsets["06-08/dctr"], subsets["09-11/dctr"]]
+            [
+                subsets["03-05/judged/dctr"],
+                subsets["06-08/judged/dctr"],
+                subsets["09-11/judged/dctr"],
+            ]
         ),
     )
