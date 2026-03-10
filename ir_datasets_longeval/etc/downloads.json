@@ -69,10 +69,35 @@
     }
   },
   "longeval-sci-2026": {
-    "longeval_sci_2026": {
-      "description": "tbd",
-      "cache_path": "longeval-sci-2026",
-      "instructions": "tbd"
+    "longeval_sci_training_2026_documents": {
+      "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/longeval_sci_training_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
+      "cache_path": "longeval_sci_training_2026_abstract.zip",
+      "instructions": "tbd",
+      "expected_md5": "65c1f414555a98a78b69887238013631"
+    },
+    "longeval_sci_training_2026_qrels": {
+      "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/qrels-train.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
+      "cache_path": "qrels-train.txt",
+      "instructions": "tbd",
+      "expected_md5": "ffa7b8ef6f9a57d1e8727baf364ed180"
+    },
+    "longeval_sci_training_2026_queries": {
+      "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/queries-train.tsv?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
+      "cache_path": "queries-train.tsv",
+      "instructions": "tbd",
+      "expected_md5": "141891a547e67f52042f9c19abd55a4b"
+    },
+    "longeval_sci_06_08_2026_documents": {
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/longeval_sci_test-06-08_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjU4ZDVlNDg2LTg2NmYtNDMxMi05ZjdlLWMzMWY0NDU3ZGNlYyIsImRhdGEiOnt9LCJyYW5kb20iOiIxOTgzMDkxNjM4NjZjYTEyNTY3M2M1Y2ExZWI2Mjc5NyJ9.0ps8vbrwgzcUP069WCzT6EKq9X2SuwPImL9p5AC8MHC7SoAcx8YeUllpNc3EbNQN7UY02avbHh80fE7fwRNLHA",
+      "cache_path": "longeval_sci_test-06-08_2026_abstract.zip",
+      "instructions": "tbd",
+      "expected_md5": "09bbdee27604ac0c48e5ce0a9ba27266"
+    },
+    "longeval_sci_09_11_2026_documents": {
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/longeval_sci_test-09-11_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjU4ZDVlNDg2LTg2NmYtNDMxMi05ZjdlLWMzMWY0NDU3ZGNlYyIsImRhdGEiOnt9LCJyYW5kb20iOiIxOTgzMDkxNjM4NjZjYTEyNTY3M2M1Y2ExZWI2Mjc5NyJ9.0ps8vbrwgzcUP069WCzT6EKq9X2SuwPImL9p5AC8MHC7SoAcx8YeUllpNc3EbNQN7UY02avbHh80fE7fwRNLHA",
+      "cache_path": "longeval_sci_test-09-11_2026_abstract.zip",
+      "instructions": "tbd",
+      "expected_md5": "02b3cdc3f96257b2e301d8a1772aa194"
     }
   }
 }
