@@ -69,6 +69,11 @@
     }
   },
   "longeval-sci-2026": {
+    "rag-questions.jsonl": {
+      "instructions": "Replace with url when available.",
+      "cache_path": "rag-questions.jsonl",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
     "longeval_sci_training_2026_documents": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/longeval_sci_training_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "longeval_sci_training_2026_abstract.zip",

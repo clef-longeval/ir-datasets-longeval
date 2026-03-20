@@ -8,7 +8,7 @@ from typing import Dict, List, NamedTuple, Optional
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
-from ir_datasets.formats import JsonlDocs, TrecQrels, TsvQueries
+from ir_datasets.formats import JsonlDocs, JsonlQueries, TrecQrels, TsvQueries
 from ir_datasets.util import ZipExtractCache, home_path
 
 from ir_datasets_longeval.formats import MetaDataset
@@ -59,6 +59,12 @@ class LongEvalSciDoc(NamedTuple):
         return ret
 
 
+class LongEvalRagQuestions(NamedTuple):
+    question_id: str
+    question: str
+    docs_id: List[str]
+
+
 class ExtractedPath:
     def __init__(self, path):
         self._path = path
@@ -93,17 +99,6 @@ class LongEvalSciDataset(Dataset):
         qrels_path: Optional[Path] = None,
         queries_path: Optional[Path] = None,
     ):
-        """LongEvalSciDataset class
-
-        Args:
-            base_path (Path): Base path to the root of a typical longeval sci dataset directory structure.
-            yaml_documentation (str, optional): Documentation file. Defaults to "longeval_sci_2026.yaml".
-            timestamp (Optional[str], optional): Timestamp in the YYYY-MM format of the snapshot. Defaults to None.
-            prior_datasets (Optional[List[str]], optional): List of all snapshot that come before this snapshot. Defaults to None.
-            snapshot (Optional[str], optional): Name of the sub-collection. This was previously also referred to as lag and is most likely similar to the dataset_id. Defaults to None.
-            qrels_path (Optional[Path], optional): Path to the qrels file. Defaults to None.
-            queries_path (Optional[Path], optional): Path to the queries file. Defaults to None.
-        """
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
 
@@ -157,15 +152,15 @@ class LongEvalSciDataset(Dataset):
         if not queries_path:
             queries_path = base_path / "queries-test.tsv"
 
-        # if not queries_path.is_file():
-        #     raise FileNotFoundError(
-        #         f"I expected that the file {queries_path} exists. But the directory does not exist."
-        #     )
-
-        queries = TsvQueries(queries_path)
+        if queries_path.path().endswith("jsonl"):
+            # load rag queries
+            queries = JsonlQueries(
+                queries_path, query_cls=LongEvalRagQuestions, lang="en"
+            )
+        else:
+            queries = TsvQueries(queries_path)
 
         qrels = None
-        # if qrels_path is not None and qrels_path.is_file():
         if qrels_path:
             qrels = TrecQrels(qrels_path, QREL_DEFS)
 
@@ -365,6 +360,14 @@ def register():
         snapshot="snapshot-3",
         qrels_path=dlc["test_qrels_snapshot_3_dctr"],
         queries_path=queries_path_test,
+    )
+
+    subsets["snapshot-3/rag"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[subsets["snapshot-2"], subsets["snapshot-1"]],
+        snapshot="snapshot-3",
+        queries_path=dlc["rag-questions.jsonl"],
     )
 
     for s in sorted(subsets):
