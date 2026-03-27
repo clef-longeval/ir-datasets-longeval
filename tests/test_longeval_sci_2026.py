@@ -168,6 +168,19 @@ class TestLongEval2026Snapshot:
                 "timestamp": datetime(2025, 9, 1),
                 "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
             },
+            {
+                "snapshot": "snapshot-3/rag",
+                "n_queries": 47,
+                "expected_queries": {
+                    "804711f54939af9622c3c7614da85298": "How well do trial-specific early composite benefits predict broader pooled-event reductions?"
+                },
+                "n_qrels": 0,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2", "snapshot-1"],
+            },
         ],
     )
     def snapshot_data(self, request):
