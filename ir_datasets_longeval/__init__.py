@@ -15,6 +15,10 @@ from ir_datasets_longeval.datasets.longeval_sci import register as register_long
 from ir_datasets_longeval.datasets.longeval_sci import (
     register_spot_check_datasets as register_spot_check_datasets_sci,
 )
+from ir_datasets_longeval.datasets.longeval_sci_2026 import (
+    register as register_longeval_sci_2026,
+)
+
 from ir_datasets_longeval.datasets.longeval_web import LongEvalWebDataset
 from ir_datasets_longeval.datasets.longeval_web import register as register_longeval_web
 
@@ -43,8 +47,12 @@ def load(longeval_ir_dataset: Union[str]):
     if longeval_ir_dataset is None:
         raise ValueError("Please pass either a string or a Path.")
 
-    if longeval_ir_dataset.startswith("longeval-sci/spot-check"):
+    if longeval_ir_dataset.startswith("longeval-sci-2026/spot-check"):
         register_spot_check_datasets_sci()
+    elif longeval_ir_dataset.startswith("longeval-sci/spot-check"):
+        register_spot_check_datasets_sci()
+    elif longeval_ir_dataset.startswith("longeval-sci-2026"):
+        register_longeval_sci_2026()
     elif longeval_ir_dataset.startswith("longeval-sci"):
         register_longeval_sci()
     elif longeval_ir_dataset.startswith("longeval-web"):
@@ -100,10 +108,13 @@ def register(dataset=None) -> None:
         register_longeval_web()
     elif dataset == "longeval-2023":
         register_longeval_2023()
+    elif dataset == "longeval-sci-2026":
+        register_longeval_sci_2026()
     else:
         register_longeval_web()
         register_longeval_sci()
         register_longeval_2023()
+        register_longeval_sci_2026()
 
 
 def main_cli() -> None:
