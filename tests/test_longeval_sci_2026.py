@@ -51,7 +51,7 @@ class TestLongEval2026Snapshot:
             # 03-05
             {
                 "snapshot": "snapshot-1",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -64,7 +64,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-1/raw",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -77,7 +77,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-1/dctr",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -91,7 +91,7 @@ class TestLongEval2026Snapshot:
             ## 06-09
             {
                 "snapshot": "snapshot-2",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -104,7 +104,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-2/raw",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -117,7 +117,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-2/dctr",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -131,7 +131,7 @@ class TestLongEval2026Snapshot:
             ## 09-11
             {
                 "snapshot": "snapshot-3",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -144,7 +144,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-3/raw",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
@@ -157,7 +157,7 @@ class TestLongEval2026Snapshot:
             },
             {
                 "snapshot": "snapshot-3/dctr",
-                "n_queries": 334,
+                "n_queries": 381,
                 "expected_queries": {
                     "a2a64265721427605ec182827171265b": "cybersecurity"
                 },
