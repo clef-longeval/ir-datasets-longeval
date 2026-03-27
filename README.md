@@ -22,13 +22,17 @@ pip install ir-datasets-longeval
 
 ## Usage
 
-The `ir_datasets_longeval` extension provides an `load` method that returns a LongEval `ir_dataset` that allows to load official versions of the LongEval datasets as well as modified versions that you have on your local filesystem:
+> [!TIP]
+> [LongEval 2026](https://clef-longeval.github.io/): The new `longeval-sci-2026` test collection is now available and we included extra tags for the shared task: `longeval-sci-2026/clef-2026/sci` and `longeval-sci-2026/clef-2026/rag`.
+
+
+The `ir_datasets_longeval` extension provides a `load` method that returns a LongEval `ir_dataset` that allows to load official versions of the LongEval datasets as well as modified versions that you have on your local file system:
 
 ```python
 from ir_datasets_longeval import load
 
 # load an official version of the LongEval dataset.
-dataset = load("longeval-web/2022-06")
+dataset = load("longeval-sci-2026/snapshot-3")
 
 # load a local copy of a LongEval dataset.
 # E.g., so that you can easily run your approach on modified data.
@@ -60,7 +64,6 @@ ir_datasets_longeval list
 ## Datasets
 
 ### LongEval 2026
-- longeval-sci-2026
 <details>
   <summary> Details </summary>
 
@@ -71,7 +74,6 @@ The fourth LongEval Lab in 2026 introduced a new LongEval-Sci test collection. I
 - `longeval-sci-2026/clef-2026/sci`
 - `longeval-sci-2026/clef-2026/sci/raw`
 - `longeval-sci-2026/clef-2026/sci/dctr`
-- `longeval-sci-2026/clef-2026/rag`
 
 
 #### Tags:
@@ -85,6 +87,7 @@ The fourth LongEval Lab in 2026 introduced a new LongEval-Sci test collection. I
 - `longeval-sci/snapshot-3/raw`
 - `longeval-sci/snapshot-3/dctr`
 - `longeval-sci/snapshot-3/rag`
+- `longeval-sci-2026/clef-2026/rag`
 
 
 </details>
