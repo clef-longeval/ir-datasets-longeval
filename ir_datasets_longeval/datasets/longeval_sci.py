@@ -192,15 +192,21 @@ class LongEvalSciDataset(Dataset):
             return self.prior_datasets
 
     def read_property_from_metadata(self, property):
-        try:
-            return json.load(open(self.base_path / "etc" / "metadata.json", "r"))[
-                property
-            ]
-        except FileNotFoundError:
-            metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
-            return metadata[f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"][
-                property
-            ]
+        property_files = [
+            self.base_path / "etc" / "metadata.json",
+            self.base_path / "metadata.json"
+        ]
+
+        for property_file in property_files:
+            if Path(property_file).exists() and Path(property_file).is_file():
+                return json.load(open(property_file, "r"))[property]
+
+        if property == "timestamp":
+            raise ValueError("Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset.")
+
+        package_metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
+        key = f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"
+        return package_metadata[key][property]
 
 
 def register_spot_check_datasets():
