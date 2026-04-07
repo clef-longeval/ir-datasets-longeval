@@ -7,7 +7,7 @@ from ir_datasets_longeval import load
 class TestLocalDataset(unittest.TestCase):
     def test_fails_on_non_existing_directory(self):
         dataset_id = str((Path(__file__).parent).absolute().resolve())
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(ValueError):
             load(dataset_id)
 
     def test_local_dataset_without_prior_datasets(self):

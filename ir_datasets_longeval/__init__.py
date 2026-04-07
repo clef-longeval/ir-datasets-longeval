@@ -24,10 +24,15 @@ from ir_datasets_longeval.datasets.longeval_web import register as register_long
 
 
 def read_property_from_metadata(base_path, property):
-    base = json.load(open(Path(base_path) / "etc" / "metadata.json", "r")).get(
-        property, ""
-    )
-    return base
+    property_files = [
+        Path(base_path) / "etc" / "metadata.json",
+        Path(base_path) / "metadata.json"
+    ]
+    
+    for p in property_files:
+        if Path(p).exists() and Path(p).is_file():
+            return json.load(open(p, "r")).get(property, "")
+    raise ValueError(f"Could not load a metadata.json from {base_path}")
 
 
 def load(longeval_ir_dataset: Union[str]):

@@ -277,13 +277,20 @@ class LongEvalWebDataset(Dataset):
             return self.prior_datasets
 
     def read_property_from_metadata(self, property):
-        try:
-            return json.load(open(self.base_path / "etc" / "metadata.json", "r"))[
-                property
-            ]
-        except FileNotFoundError:
-            metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
-            return metadata[f"longeval-web/{self.snapshot}"][property]
+        property_files = [
+            self.base_path / "etc" / "metadata.json",
+            self.base_path / "metadata.json"
+        ]
+
+        for p in property_files:
+            if Path(p).exists() and Path(p).is_file():
+                return json.load(open(p, "r"))[property]
+
+        metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
+        metadata = metadata[f"longeval-web/{self.snapshot}"]
+        if property == "prior-datasets" and property not in metadata:
+            return []
+        return metadata[property]
 
 
 def register():

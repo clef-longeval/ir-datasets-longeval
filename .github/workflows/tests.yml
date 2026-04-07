@@ -26,4 +26,4 @@ jobs:
           pip3 install .[tests]
       - name: Running Tests
         run: |
-          pytest tests/test_spot_check_datasets.py
+          pytest tests/test_spot_check_datasets.py tests/test_local_dataset.py tests/test_environment_variable_is_used_in_tira_sandbox.py
