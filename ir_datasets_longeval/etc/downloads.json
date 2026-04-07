@@ -89,20 +89,24 @@
       "cache_path": "longeval_sci_test-09-11_2026_abstract.zip",
       "expected_md5": "02b3cdc3f96257b2e301d8a1772aa194"
     },
+
+
+    
     "longeval_sci_training_2026_documents": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/longeval_sci_training_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "longeval_sci_training_2026_abstract.zip",
       "expected_md5": "65c1f414555a98a78b69887238013631"
     },
+
     "longeval_sci_training_2026_qrels_dctr": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/qrels-snapshot-train-dctr.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "qrels-snapshot-train-dctr.txt",
-      "expected_md5": "a3c65eb13af23c870dd9966ca87b2110"
+      "expected_md5": "b24137c5cae89c59103e2f422c7383be"
     },
     "longeval_sci_training_2026_qrels_raw": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/qrels-snapshot-train-raw.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "qrels-snapshot-train-raw.txt",
-      "expected_md5": "ffa7b8ef6f9a57d1e8727baf364ed180"
+      "expected_md5": "1a8cebd1ae84534d5397813a0289b50f"
     },
     "longeval_sci_training_2026_queries": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/queries-snapshot-train.tsv?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
