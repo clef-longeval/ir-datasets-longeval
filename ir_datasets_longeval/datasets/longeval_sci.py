@@ -9,11 +9,12 @@ from typing import Dict, List, NamedTuple, Optional
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
-from ir_datasets.formats import JsonlDocs, TrecQrels, TsvQueries
+from ir_datasets.formats import JsonlDocs, TrecQrels, TsvQueries, JsonlQueries
 from ir_datasets.util import ZipExtractCache, home_path
 
 from ir_datasets_longeval.formats import MetaDataset
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
+from ir_datasets_longeval.datasets.longeval_sci_2026 import LongEvalRagQuestions
 
 NAME = "longeval-sci"
 QREL_DEFS = {
@@ -156,12 +157,18 @@ class LongEvalSciDataset(Dataset):
 
         if not queries_path:
             queries_path = base_path / "queries.txt"
+            queries = TsvQueries(ExtractedPath(queries_path))
+        if not queries_path.exists() or not queries_path.is_file():
+            queries_path = base_path / "queries.jsonl"
+            queries = JsonlQueries(
+                ExtractedPath(queries_path), query_cls=LongEvalRagQuestions, lang="en"
+            )
         if not queries_path.exists() or not queries_path.is_file():
             raise FileNotFoundError(
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
             )
 
-        queries = TsvQueries(ExtractedPath(queries_path))
+
 
         qrels = None
         if not qrels_path:
@@ -192,15 +199,21 @@ class LongEvalSciDataset(Dataset):
             return self.prior_datasets
 
     def read_property_from_metadata(self, property):
-        try:
-            return json.load(open(self.base_path / "etc" / "metadata.json", "r"))[
-                property
-            ]
-        except FileNotFoundError:
-            metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
-            return metadata[f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"][
-                property
-            ]
+        property_files = [
+            self.base_path / "etc" / "metadata.json",
+            self.base_path / "metadata.json"
+        ]
+
+        for property_file in property_files:
+            if Path(property_file).exists() and Path(property_file).is_file():
+                return json.load(open(property_file, "r"))[property]
+
+        if property == "timestamp":
+            raise ValueError("Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset.")
+
+        package_metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
+        key = f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"
+        return package_metadata[key][property]
 
 
 def register_spot_check_datasets():
