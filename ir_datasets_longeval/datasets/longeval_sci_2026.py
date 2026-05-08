@@ -1,4 +1,3 @@
-import contextlib
 import json
 import os
 from datetime import datetime
@@ -14,10 +13,6 @@ from ir_datasets.util import ZipExtractCache, home_path
 from ir_datasets_longeval.formats import MetaDataset
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
 import contextlib
-from pathlib import Path
-from typing import Dict, List, NamedTuple, Optional
-
-from ir_datasets.datasets.base import Dataset
 
 NAME = "longeval-sci-2026"
 QREL_DEFS = {
