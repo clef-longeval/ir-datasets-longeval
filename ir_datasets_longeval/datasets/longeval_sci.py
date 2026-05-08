@@ -155,19 +155,31 @@ class LongEvalSciDataset(Dataset):
             mapping=MAPPING,
         )
 
+        # Queries
         if not queries_path:
-            queries_path = base_path / "queries.txt"
-        if not queries_path.exists() or not queries_path.is_file():
-            queries_path = base_path / "queries.jsonl"
-            queries = JsonlQueries(
-                ExtractedPath(queries_path), query_cls=LongEvalRagQuestions, lang="en"
-            )
-        if not queries_path.exists() or not queries_path.is_file():
-            raise FileNotFoundError(
-                f"I expected that the file {queries_path} exists. But the directory does not exist."
-            )
+            # Try .txt first, then fallback to .jsonl
+            txt_path = base_path / "queries.txt"
+            jsonl_path = base_path / "queries.jsonl"
 
-        queries = TsvQueries(ExtractedPath(queries_path))
+            if txt_path.exists() and txt_path.is_file():
+                queries_path = txt_path
+            elif jsonl_path.exists() and jsonl_path.is_file():
+                queries_path = jsonl_path
+            else:
+                raise FileNotFoundError(
+                    f"Could not find queries.txt or queries.jsonl in {base_path}"
+                )
+
+        if queries_path.suffix == ".txt":
+            queries = TsvQueries(ExtractedPath(queries_path))
+        elif queries_path.suffix == ".jsonl":
+            queries = JsonlQueries(
+                ExtractedPath(queries_path),
+                query_cls=LongEvalRagQuestions,
+                lang="en",
+            )
+        else:
+            raise ValueError(f"Unsupported query file format: {queries_path.suffix}")
 
         qrels = None
         if not qrels_path:
