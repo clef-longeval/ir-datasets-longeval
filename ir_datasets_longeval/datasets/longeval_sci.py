@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
 from shutil import copyfile
-from typing import Dict, List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional, Callable, Iterable, Any
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
@@ -189,8 +189,10 @@ class LongEvalSciDataset(Dataset):
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 
         super().__init__(docs, queries, qrels, documentation)
-        original_iter = self.docs_iter
-        self.docs_iter = lambda: docs_iter_without_duplicates(original_iter())
+        original_iter: Callable[[], Iterable[Any]] = self.docs_iter
+        self.docs_iter: Callable[[], Iterable[Any]] = (
+            lambda: docs_iter_without_duplicates(original_iter())
+        )
 
     def get_timestamp(self):
         return self.timestamp

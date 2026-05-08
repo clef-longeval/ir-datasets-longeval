@@ -3,12 +3,12 @@ import os
 from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
-from typing import Dict, List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional, Any, Callable, Iterable
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
 from ir_datasets.formats import JsonlDocs, JsonlQueries, TrecQrels, TsvQueries
-from ir_datasets.util import ZipExtractCache, home_path
+from ir_datasets.util import ZipExtractCache, home_path, Download
 
 from ir_datasets_longeval.formats import MetaDataset
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
@@ -100,7 +100,7 @@ class LongEvalSciDataset(Dataset):
         prior_datasets: Optional[List[str]] = None,
         snapshot: Optional[str] = None,
         qrels_path: Optional[Path] = None,
-        queries_path: Optional[Path] = None,
+        queries_path: Optional[Download] = None,
     ):
         documentation = YamlDocumentation(yaml_documentation)
         self.base_path = base_path
@@ -152,14 +152,13 @@ class LongEvalSciDataset(Dataset):
             mapping=MAPPING,
         )
 
-        if not queries_path:
-            queries_path = base_path / "queries-test.tsv"
-
-        if queries_path.path().endswith("jsonl"):
+        if queries_path and queries_path.path().endswith(".jsonl"):
+            print(str(queries_path))
             # load rag queries
             queries = JsonlQueries(
                 queries_path, query_cls=LongEvalRagQuestions, lang="en"
             )
+
         else:
             queries = TsvQueries(queries_path)
 
@@ -168,8 +167,10 @@ class LongEvalSciDataset(Dataset):
             qrels = TrecQrels(qrels_path, QREL_DEFS)
 
         super().__init__(docs, queries, qrels, documentation)
-        original_iter = self.docs_iter
-        self.docs_iter = lambda: docs_iter_without_duplicates(original_iter())
+        original_iter: Callable[[], Iterable[Any]] = self.docs_iter
+        self.docs_iter: Callable[[], Iterable[Any]] = (
+            lambda: docs_iter_without_duplicates(original_iter())
+        )
 
     def get_timestamp(self):
         return self.timestamp
