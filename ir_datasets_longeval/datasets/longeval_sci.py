@@ -157,7 +157,6 @@ class LongEvalSciDataset(Dataset):
 
         if not queries_path:
             queries_path = base_path / "queries.txt"
-            queries = TsvQueries(ExtractedPath(queries_path))
         if not queries_path.exists() or not queries_path.is_file():
             queries_path = base_path / "queries.jsonl"
             queries = JsonlQueries(
@@ -168,7 +167,7 @@ class LongEvalSciDataset(Dataset):
                 f"I expected that the file {queries_path} exists. But the directory does not exist."
             )
 
-
+        queries = TsvQueries(ExtractedPath(queries_path))
 
         qrels = None
         if not qrels_path:
@@ -201,7 +200,7 @@ class LongEvalSciDataset(Dataset):
     def read_property_from_metadata(self, property):
         property_files = [
             self.base_path / "etc" / "metadata.json",
-            self.base_path / "metadata.json"
+            self.base_path / "metadata.json",
         ]
 
         for property_file in property_files:
@@ -209,9 +208,13 @@ class LongEvalSciDataset(Dataset):
                 return json.load(open(property_file, "r"))[property]
 
         if property == "timestamp":
-            raise ValueError("Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset.")
+            raise ValueError(
+                "Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset."
+            )
 
-        package_metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
+        package_metadata = json.loads(
+            get_data("ir_datasets_longeval", "etc/metadata.json")
+        )
         key = f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"
         return package_metadata[key][property]
 
