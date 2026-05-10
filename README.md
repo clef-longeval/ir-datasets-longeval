@@ -77,17 +77,16 @@ The fourth LongEval Lab in 2026 introduced a new LongEval-Sci test collection. I
 
 
 #### Tags:
-- `longeval-sci/snapshot-1`
-- `longeval-sci/snapshot-1/raw`
-- `longeval-sci/snapshot-1/dctr`
-- `longeval-sci/snapshot-2`
-- `longeval-sci/snapshot-2/raw`
-- `longeval-sci/snapshot-2/dctr`
-- `longeval-sci/snapshot-3`
-- `longeval-sci/snapshot-3/raw`
-- `longeval-sci/snapshot-3/dctr`
-- `longeval-sci/snapshot-3/rag`
-- `longeval-sci-2026/clef-2026/rag`
+- `longeval-sci-2026/snapshot-1`
+- `longeval-sci-2026/snapshot-1/raw`
+- `longeval-sci-2026/snapshot-1/dctr`
+- `longeval-sci-2026/snapshot-2`
+- `longeval-sci-2026/snapshot-2/raw`
+- `longeval-sci-2026/snapshot-2/dctr`
+- `longeval-sci-2026/snapshot-3`
+- `longeval-sci-2026/snapshot-3/raw`
+- `longeval-sci-2026/snapshot-3/dctr`
+- `longeval-sci-2026/snapshot-3/rag`   same as `longeval-sci-2026/clef-2026/rag`
 
 
 </details>

@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
 from shutil import copyfile
-from typing import Dict, List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional, Callable, Iterable, Any
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
@@ -155,20 +155,31 @@ class LongEvalSciDataset(Dataset):
             mapping=MAPPING,
         )
 
+        # Queries
         if not queries_path:
-            queries_path = base_path / "queries.txt"
+            # Try .txt first, then fallback to .jsonl
+            txt_path = base_path / "queries.txt"
+            jsonl_path = base_path / "queries.jsonl"
+
+            if txt_path.exists() and txt_path.is_file():
+                queries_path = txt_path
+            elif jsonl_path.exists() and jsonl_path.is_file():
+                queries_path = jsonl_path
+            else:
+                raise FileNotFoundError(
+                    f"Could not find queries.txt or queries.jsonl in {base_path}"
+                )
+
+        if queries_path.suffix == ".txt":
             queries = TsvQueries(ExtractedPath(queries_path))
-        if not queries_path.exists() or not queries_path.is_file():
-            queries_path = base_path / "queries.jsonl"
+        elif queries_path.suffix == ".jsonl":
             queries = JsonlQueries(
-                ExtractedPath(queries_path), query_cls=LongEvalRagQuestions, lang="en"
+                ExtractedPath(queries_path),
+                query_cls=LongEvalRagQuestions,
+                lang="en",
             )
-        if not queries_path.exists() or not queries_path.is_file():
-            raise FileNotFoundError(
-                f"I expected that the file {queries_path} exists. But the directory does not exist."
-            )
-
-
+        else:
+            raise ValueError(f"Unsupported query file format: {queries_path.suffix}")
 
         qrels = None
         if not qrels_path:
@@ -178,8 +189,10 @@ class LongEvalSciDataset(Dataset):
             qrels = TrecQrels(ExtractedPath(qrels_path), QREL_DEFS)
 
         super().__init__(docs, queries, qrels, documentation)
-        original_iter = self.docs_iter
-        self.docs_iter = lambda: docs_iter_without_duplicates(original_iter())
+        original_iter: Callable[[], Iterable[Any]] = self.docs_iter
+        self.docs_iter: Callable[[], Iterable[Any]] = (
+            lambda: docs_iter_without_duplicates(original_iter())
+        )
 
     def get_timestamp(self):
         return self.timestamp
@@ -201,7 +214,7 @@ class LongEvalSciDataset(Dataset):
     def read_property_from_metadata(self, property):
         property_files = [
             self.base_path / "etc" / "metadata.json",
-            self.base_path / "metadata.json"
+            self.base_path / "metadata.json",
         ]
 
         for property_file in property_files:
@@ -209,9 +222,13 @@ class LongEvalSciDataset(Dataset):
                 return json.load(open(property_file, "r"))[property]
 
         if property == "timestamp":
-            raise ValueError("Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset.")
+            raise ValueError(
+                "Configuration error: I can not load the timestamp property from non-existing metadata files. This is a configuration error for the dataset."
+            )
 
-        package_metadata = json.loads(get_data("ir_datasets_longeval", "etc/metadata.json"))
+        package_metadata = json.loads(
+            get_data("ir_datasets_longeval", "etc/metadata.json")
+        )
         key = f"longeval-sci/{self.timestamp.strftime('%Y-%m')}/train"
         return package_metadata[key][property]
 
