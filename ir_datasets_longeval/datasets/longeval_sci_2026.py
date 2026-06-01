@@ -1,18 +1,18 @@
+import contextlib
 import json
 import os
 from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
-from typing import Dict, List, NamedTuple, Optional, Any, Callable, Iterable
+from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Optional
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
 from ir_datasets.formats import JsonlDocs, JsonlQueries, TrecQrels, TsvQueries
-from ir_datasets.util import ZipExtractCache, home_path, Download
+from ir_datasets.util import Download, ZipExtractCache, home_path
 
 from ir_datasets_longeval.formats import MetaDataset
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
-import contextlib
 
 NAME = "longeval-sci-2026"
 QREL_DEFS = {
@@ -168,8 +168,8 @@ class LongEvalSciDataset(Dataset):
 
         super().__init__(docs, queries, qrels, documentation)
         original_iter: Callable[[], Iterable[Any]] = self.docs_iter
-        self.docs_iter: Callable[[], Iterable[Any]] = (
-            lambda: docs_iter_without_duplicates(original_iter())
+        self.docs_iter: Callable[[], Iterable[Any]] = lambda: (
+            docs_iter_without_duplicates(original_iter())
         )
 
     def get_timestamp(self):
@@ -290,6 +290,40 @@ def register():
         queries_path=queries_path_test,
     )
 
+    # LLM-based relevance judgments
+    subsets["snapshot-1/llama3-1-8b"] = LongEvalSciDataset(
+        base_path=data_path_train,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="snapshot-1",
+        qrels_path=dlc["test_qrels_snapshot_1_llama3-1-8b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-1/gpt-oss-20b"] = LongEvalSciDataset(
+        base_path=data_path_train,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="snapshot-1",
+        qrels_path=dlc["test_qrels_snapshot_1_gpt-oss-20b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-1/gpt-oss-120b"] = LongEvalSciDataset(
+        base_path=data_path_train,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="snapshot-1",
+        qrels_path=dlc["test_qrels_snapshot_1_gpt-oss-120b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-1/qwen3-32b"] = LongEvalSciDataset(
+        base_path=data_path_train,
+        timestamp="2025-03",
+        prior_datasets=[],
+        snapshot="snapshot-1",
+        qrels_path=dlc["test_qrels_snapshot_1_qwen3-32b"],
+        queries_path=queries_path_test,
+    )
+
     ### 06-08
     data_path = (
         ZipExtractCache(
@@ -325,6 +359,39 @@ def register():
         prior_datasets=[subsets["snapshot-1/dctr"]],
         snapshot="snapshot-2",
         qrels_path=dlc["test_qrels_snapshot_2_dctr"],
+        queries_path=queries_path_test,
+    )
+
+    subsets["snapshot-2/llama3-1-8b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["snapshot-1/llama3-1-8b"]],
+        snapshot="snapshot-2",
+        qrels_path=dlc["test_qrels_snapshot_2_llama3-1-8b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-2/gpt-oss-20b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["snapshot-1/gpt-oss-20b"]],
+        snapshot="snapshot-2",
+        qrels_path=dlc["test_qrels_snapshot_2_gpt-oss-20b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-2/gpt-oss-120b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["snapshot-1/gpt-oss-120b"]],
+        snapshot="snapshot-2",
+        qrels_path=dlc["test_qrels_snapshot_2_gpt-oss-120b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-2/qwen3-32b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-06",
+        prior_datasets=[subsets["snapshot-1/qwen3-32b"]],
+        snapshot="snapshot-2",
+        qrels_path=dlc["test_qrels_snapshot_2_qwen3-32b"],
         queries_path=queries_path_test,
     )
 
@@ -366,6 +433,59 @@ def register():
         queries_path=queries_path_test,
     )
 
+    subsets["snapshot-3/dctr"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[subsets["snapshot-2/dctr"], subsets["snapshot-1/dctr"]],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_llama3-1-8b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-3/llama3-1-8b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[
+            subsets["snapshot-2/llama3-1-8b"],
+            subsets["snapshot-1/llama3-1-8b"],
+        ],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_llama3-1-8b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-3/gpt-oss-20b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[
+            subsets["snapshot-2/gpt-oss-20b"],
+            subsets["snapshot-1/gpt-oss-20b"],
+        ],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_gpt-oss-20b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-3/gpt-oss-120b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[
+            subsets["snapshot-2/gpt-oss-120b"],
+            subsets["snapshot-1/gpt-oss-120b"],
+        ],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_gpt-oss-120b"],
+        queries_path=queries_path_test,
+    )
+    subsets["snapshot-3/qwen3-32b"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[
+            subsets["snapshot-2/qwen3-32b"],
+            subsets["snapshot-1/qwen3-32b"],
+        ],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_qwen3-32b"],
+        queries_path=queries_path_test,
+    )
+
     subsets["snapshot-3/rag"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
@@ -403,6 +523,46 @@ def register():
                 subsets["snapshot-1/dctr"],
                 subsets["snapshot-2/dctr"],
                 subsets["snapshot-3/dctr"],
+            ]
+        ),
+    )
+    registry.register(
+        f"{NAME}/*/llama3-1-8b",
+        MetaDataset(
+            [
+                subsets["snapshot-1/llama3-1-8b"],
+                subsets["snapshot-2/llama3-1-8b"],
+                subsets["snapshot-3/llama3-1-8b"],
+            ]
+        ),
+    )
+    registry.register(
+        f"{NAME}/*/qwen3-32b",
+        MetaDataset(
+            [
+                subsets["snapshot-1/qwen3-32b"],
+                subsets["snapshot-2/qwen3-32b"],
+                subsets["snapshot-3/qwen3-32b"],
+            ]
+        ),
+    )
+    registry.register(
+        f"{NAME}/*/gpt-oss-20b",
+        MetaDataset(
+            [
+                subsets["snapshot-1/gpt-oss-20b"],
+                subsets["snapshot-2/gpt-oss-20b"],
+                subsets["snapshot-3/gpt-oss-20b"],
+            ]
+        ),
+    )
+    registry.register(
+        f"{NAME}/*/gpt-oss-120b",
+        MetaDataset(
+            [
+                subsets["snapshot-1/gpt-oss-120b"],
+                subsets["snapshot-2/gpt-oss-120b"],
+                subsets["snapshot-3/gpt-oss-120b"],
             ]
         ),
     )

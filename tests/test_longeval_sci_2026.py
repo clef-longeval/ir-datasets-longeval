@@ -88,6 +88,58 @@ class TestLongEval2026Snapshot:
             #      "timestamp": datetime(2025, 3, 1),
             #      "prior_snapshots": [],
             #  },
+            {
+                "snapshot": "snapshot-1/llama3-1-8b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 19675,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 3, 1),
+                "prior_snapshots": [],
+            },
+            {
+                "snapshot": "snapshot-1/gpt-oss-20b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 19675,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 3, 1),
+                "prior_snapshots": [],
+            },
+            {
+                "snapshot": "snapshot-1/gpt-oss-120b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 19675,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 3, 1),
+                "prior_snapshots": [],
+            },
+            {
+                "snapshot": "snapshot-1/qwen3-32b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 19675,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 3, 1),
+                "prior_snapshots": [],
+            },
             ## 06-09
             {
                 "snapshot": "snapshot-2",
@@ -128,6 +180,58 @@ class TestLongEval2026Snapshot:
             #       "timestamp": datetime(2025, 6, 1),
             #       "prior_snapshots": ["snapshot-1/dctr"],
             #   },
+            {
+                "snapshot": "snapshot-2/llama3-1-8b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20489,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 6, 1),
+                "prior_snapshots": ["snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-2/gpt-oss-20b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20489,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 6, 1),
+                "prior_snapshots": ["snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-2/gpt-oss-120b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20489,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 6, 1),
+                "prior_snapshots": ["snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-2/qwen3-32b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20489,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 6, 1),
+                "prior_snapshots": ["snapshot-1/dctr"],
+            },
             ## 09-11
             {
                 "snapshot": "snapshot-3",
@@ -168,6 +272,58 @@ class TestLongEval2026Snapshot:
             #      "timestamp": datetime(2025, 9, 1),
             #      "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
             #  },
+            {
+                "snapshot": "snapshot-3/llama3-1-8b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20961,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-3/gpt-oss-20b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20961,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-3/gpt-oss-120b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20961,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
+            },
+            {
+                "snapshot": "snapshot-3/qwen3-32b",
+                "n_queries": 381,
+                "expected_queries": {
+                    "a2a64265721427605ec182827171265b": "cybersecurity"
+                },
+                "n_qrels": 20961,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
+            },
             {
                 "snapshot": "snapshot-3/rag",
                 "n_queries": 47,
