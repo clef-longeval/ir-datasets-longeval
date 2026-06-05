@@ -433,14 +433,6 @@ def register():
         queries_path=queries_path_test,
     )
 
-    subsets["snapshot-3/dctr"] = LongEvalSciDataset(
-        base_path=data_path,
-        timestamp="2025-09",
-        prior_datasets=[subsets["snapshot-2/dctr"], subsets["snapshot-1/dctr"]],
-        snapshot="snapshot-3",
-        qrels_path=dlc["test_qrels_snapshot_3_llama3-1-8b"],
-        queries_path=queries_path_test,
-    )
     subsets["snapshot-3/llama3-1-8b"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
