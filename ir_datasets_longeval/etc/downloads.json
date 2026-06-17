@@ -89,15 +89,11 @@
       "cache_path": "longeval_sci_test-09-11_2026_abstract.zip",
       "expected_md5": "02b3cdc3f96257b2e301d8a1772aa194"
     },
-
-
-    
     "longeval_sci_training_2026_documents": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/longeval_sci_training_2026_abstract.zip?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "longeval_sci_training_2026_abstract.zip",
       "expected_md5": "65c1f414555a98a78b69887238013631"
     },
-
     "longeval_sci_training_2026_qrels_dctr": {
       "url": "https://researchdata.tuwien.ac.at/records/6avmz-esd52/files/task1_longeval_adhoc-qrels-snapshot-train-dctr.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjcxNTY1NjAwLTU0NzEtNDE3MS1iNjliLTAzYzEzZGE0MjA2ZiIsImRhdGEiOnt9LCJyYW5kb20iOiIyOTAwOGFlZWYyNzg4ZGFjM2Y3ODYwN2U0MGMxNTc1NCJ9.YZe2xbYVvyV9sF4T-knv4t4tRyTZWNi6yVuMoZ_msfLzBLWOIBEGvHKTK_vlqRz5JioNCZ5wPAOfmcKgaIosbg",
       "cache_path": "task1_longeval_adhoc-qrels-snapshot-train-dctr.txt",
@@ -114,34 +110,34 @@
       "expected_md5": "5c466301410f7e2d72b6aea5aa59e4c0"
     },
     "test_qrels_snapshot_1_dctr": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-1-dctr.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-03-05-dctr.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-03-05-dctr.txt",
+      "expected_md5": "19bdb38f202f36f5612e75046a3ad71d"
     },
     "test_qrels_snapshot_1_raw": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-1-raw.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-03-05-raw.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-03-05-raw.txt",
+      "expected_md5": "94d6d882cf43c6eac9173a37735d30d2"
     },
     "test_qrels_snapshot_2_dctr": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-2-dctr.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-06-08-dctr.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-06-08-dctr.txt",
+      "expected_md5": "56240cfba118db487f1d19922ae1626a"
     },
     "test_qrels_snapshot_2_raw": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-2-raw.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-06-08-raw.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-06-08-raw.txt",
+      "expected_md5": "31e0e35a23d1aab8a05dd805a14ad409"
     },
     "test_qrels_snapshot_3_dctr": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-3-dctr.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-09-11-dctr.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-09-11-dctr.txt",
+      "expected_md5": "f50be0e331260b36a7bd715a8de3f670"
     },
     "test_qrels_snapshot_3_raw": {
-      "instructions": "The test qrels will be released after submission deadline.",
-      "cache_path": "qrels-snapshot-3-raw.txt",
-      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+      "url": "https://researchdata.tuwien.ac.at/records/4rg9e-47328/files/task1_longeval_adhoc-qrels-snapshot-09-11-raw.txt?download=1&preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhmMzJhYjNiLThjYjItNDc3OC05ZTJlLWM2NzFlMGQ0ZTcxZCIsImRhdGEiOnt9LCJyYW5kb20iOiI5Mjc0ZjBkNzFlNjBmNDcwNjE0YjcxNjU1Y2RlMDczNCJ9.oqg_DknFJoPClTbh159okY0xZKpyjKkTbSGa2dQHnaYOKy3L46qdrWm46KisS_GBAfV4uenHPoWPrVgWrrAq5A",
+      "cache_path": "task1_longeval_adhoc-qrels-snapshot-09-11-raw.txt",
+      "expected_md5": "daf91553bbd924a308cb87c7f1dcce65"
     }
   }
 }
