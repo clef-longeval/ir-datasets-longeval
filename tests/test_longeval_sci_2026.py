@@ -252,8 +252,7 @@ class TestLongEval2026Snapshot:
                 "timestamp": datetime(2025, 9, 1),
                 "prior_snapshots": ["snapshot-2", "snapshot-1"],
             },
-             
-             {
+            {
                  "snapshot": "snapshot-3/raw",
                  "n_queries": 381,
                  "expected_queries": {
@@ -279,7 +278,7 @@ class TestLongEval2026Snapshot:
                  "timestamp": datetime(2025, 9, 1),
                  "prior_snapshots": ["snapshot-2/dctr", "snapshot-1/dctr"],
              },
-            {
+             {
                 "snapshot": "snapshot-3/llama3-1-8b",
                 "n_queries": 381,
                 "expected_queries": {
