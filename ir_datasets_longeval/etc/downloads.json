@@ -154,5 +154,11 @@
       "cache_path": "llm_synthetic_qrels.zip",
       "expected_md5": "28b2fda17abf8768d840f1ed1052eaf5"
     }
+  },
+  "dynamic-dataset": {
+    "dynamic-dataset": {
+      "instructions": "TBD",
+      "cache_path": "dynamic-dataset.zip"
+    }
   }
 }
