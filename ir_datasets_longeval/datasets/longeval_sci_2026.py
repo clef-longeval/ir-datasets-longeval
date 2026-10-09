@@ -12,7 +12,6 @@ from ir_datasets.formats import (
     JsonlDocs,
     JsonlQueries,
     TrecQrels,
-    TrecQuery,
     TsvQueries,
 )
 from ir_datasets.util import Download, ZipExtractCache, home_path
