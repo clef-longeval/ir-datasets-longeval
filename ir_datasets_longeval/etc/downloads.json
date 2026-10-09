@@ -148,6 +148,66 @@
       "instructions": "TBD",
       "cache_path": "task1_longeval_adhoc-qrels-snapshot-09-11-human.txt",
       "expected_md5": "80d43ac6056622812c2596655a206b49"
+    },
+    "test_qrels_snapshot_1_llama3-1-8b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "llama-3.1-8b-instant-umbrella_zeroshot_no_desc_no_narrative-snapshot-1.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_1_gpt-oss-20b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-20b-umbrella_zeroshot_no_desc_no_narrative-snapshot-1.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_1_gpt-oss-120b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-120b-umbrella_zeroshot_no_desc_no_narrative-snapshot-1.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_1_qwen3-32b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "qwen-qwen3-32b-umbrella_zeroshot_no_desc_no_narrative-snapshot-1.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_2_llama3-1-8b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "llama-3.1-8b-instant-umbrella_zeroshot_no_desc_no_narrative-snapshot-2.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_2_gpt-oss-20b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-20b-umbrella_zeroshot_no_desc_no_narrative-snapshot-2.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_2_gpt-oss-120b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-120b-umbrella_zeroshot_no_desc_no_narrative-snapshot-2.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_2_qwen3-32b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "qwen-qwen3-32b-umbrella_zeroshot_no_desc_no_narrative-snapshot-2.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_3_llama3-1-8b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "llama-3.1-8b-instant-umbrella_zeroshot_no_desc_no_narrative-snapshot-3.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_3_gpt-oss-20b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-20b-umbrella_zeroshot_no_desc_no_narrative-snapshot-3.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_3_gpt-oss-120b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "openai-gpt-oss-120b-umbrella_zeroshot_no_desc_no_narrative-snapshot-3.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
+    },
+    "test_qrels_snapshot_3_qwen3-32b": {
+      "instructions": "The test qrels will be released after submission deadline.",
+      "cache_path": "qwen-qwen3-32b-umbrella_zeroshot_no_desc_no_narrative-snapshot-3.qrels.txt",
+      "expected_md5": "e34cf8b5e9b2de98628759bbd621a4ca"
     }
   }
 }
