@@ -1,18 +1,24 @@
+import contextlib
 import json
 import os
 from datetime import datetime
 from pathlib import Path
 from pkgutil import get_data
-from typing import Dict, List, NamedTuple, Optional, Any, Callable, Iterable
+from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Optional
 
 from ir_datasets import registry
 from ir_datasets.datasets.base import Dataset
-from ir_datasets.formats import JsonlDocs, JsonlQueries, TrecQrels, TsvQueries
-from ir_datasets.util import ZipExtractCache, home_path, Download
+from ir_datasets.formats import (
+    JsonlDocs,
+    JsonlQueries,
+    TrecQrels,
+    TrecQuery,
+    TsvQueries,
+)
+from ir_datasets.util import Download, ZipExtractCache, home_path
 
 from ir_datasets_longeval.formats import MetaDataset
 from ir_datasets_longeval.util import DownloadConfig, YamlDocumentation
-import contextlib
 
 NAME = "longeval-sci-2026"
 QREL_DEFS = {
@@ -66,6 +72,17 @@ class LongEvalRagQuestions(NamedTuple):
 
     def default_text(self):
         return self.query
+    
+    
+class LongEvalTopics(NamedTuple):
+    query_id: str
+    query: str
+    title: str
+    description: str
+    narrative: str
+
+    def default_text(self):
+        return self.query
 
 
 class ExtractedPath:
@@ -81,7 +98,7 @@ class ExtractedPath:
     def stream(self):
         with open(self._path, "rb") as f:
             yield f
-
+    
 
 def docs_iter_without_duplicates(iterator):
     returned = set()
@@ -153,12 +170,12 @@ class LongEvalSciDataset(Dataset):
         )
 
         if queries_path and queries_path.path().endswith(".jsonl"):
-            print(str(queries_path))
             # load rag queries
             queries = JsonlQueries(
                 queries_path, query_cls=LongEvalRagQuestions, lang="en"
             )
-
+        elif queries_path and queries_path.path().endswith("human.tsv"):
+            queries = TsvQueries(queries_path, query_cls=LongEvalTopics)
         else:
             queries = TsvQueries(queries_path)
 
@@ -365,13 +382,20 @@ def register():
         qrels_path=dlc["test_qrels_snapshot_3_dctr"],
         queries_path=queries_path_test,
     )
-
     subsets["snapshot-3/rag"] = LongEvalSciDataset(
         base_path=data_path,
         timestamp="2025-09",
         prior_datasets=[subsets["snapshot-2"], subsets["snapshot-1"]],
         snapshot="snapshot-3",
-        queries_path=dlc["rag-questions.jsonl"],
+        queries_path=dlc["rag-questions"],
+    )
+    subsets["snapshot-3/human"] = LongEvalSciDataset(
+        base_path=data_path,
+        timestamp="2025-09",
+        prior_datasets=[subsets["snapshot-2"], subsets["snapshot-1"]],
+        snapshot="snapshot-3",
+        qrels_path=dlc["test_qrels_snapshot_3_human"],
+        queries_path=dlc["longeval_sci_testing_2026_topics"],
     )
 
     for s in sorted(subsets):

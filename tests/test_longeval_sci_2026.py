@@ -181,6 +181,19 @@ class TestLongEval2026Snapshot:
                 "timestamp": datetime(2025, 9, 1),
                 "prior_snapshots": ["snapshot-2", "snapshot-1"],
             },
+            {
+                "snapshot": "snapshot-3/human",
+                "n_queries": 30,
+                "expected_queries": {
+                    "10c7ef19d812f4c1bacecc0ee54d30a8": "breast cancer"
+                },
+                "n_qrels": 1581,
+                "expected_docs": {
+                    "10145682": "BETWEEN THE MEMORY OF HERITAGE AND THE HERITAGE OF MEMORY. THE SEARCH FOR CONCEPTUAL SIMILARITIES"
+                },
+                "timestamp": datetime(2025, 9, 1),
+                "prior_snapshots": ["snapshot-2", "snapshot-1"],
+            },
         ],
     )
     def snapshot_data(self, request):
@@ -199,7 +212,10 @@ class TestLongEval2026Snapshot:
 
         assert dataset.has_queries()
 
-        actual_queries = {i.query_id: i.default_text() for i in dataset.queries_iter()}
+        actual_queries = {}
+        for query in dataset.queries_iter():
+            actual_queries[query.query_id] = query.default_text()
+            
         assert len(actual_queries) == setting["n_queries"]
         for k, v in setting["expected_queries"].items():
             assert v == actual_queries[k]
