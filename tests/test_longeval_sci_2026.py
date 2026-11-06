@@ -410,19 +410,6 @@ class TestLongEval2026Snapshot:
         qrels = list(dataset.qrels_iter())
         assert len(qrels) == setting["n_qrels"]
 
-        # # test qrels
-        # # all queries have judgments
-        # # all qids in qrels are in queries
-        # qids_in_qrels = {qrel.query_id for qrel in dataset.qrels_iter()}
-        # qids_in_queries = {query.query_id for query in dataset.queries_iter()}
-        # assert qids_in_qrels == qids_in_queries
-
-        # # all qids have relevant docs
-        # qids_in_qrels = {
-        #     qrel.query_id for qrel in dataset.qrels_iter() if qrel.relevance > 0
-        # }
-        # assert qids_in_qrels == qids_in_queries
-
         # all docids in qrels are in docs
         docs_store = dataset.docs_store()
         docids_in_qrels = {qrel.doc_id for qrel in dataset.qrels_iter()}
