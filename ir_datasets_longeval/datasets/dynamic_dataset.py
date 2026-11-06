@@ -65,7 +65,10 @@ class DynamicDatasetDocument(NamedTuple):
     language: Optional[str]
     
     def default_text(self) -> str:
-        return self.title + "\n" + self.text
+        if self.text and self.title:        
+            return self.title + "\n" + self.text
+        else:
+            return self.text or self.title or ""
 
 
 class DynamicDatasetQuery(NamedTuple):
@@ -130,8 +133,8 @@ class DynamicDatasetDocuments(BaseDocs):
                 doc_id=doc["doc_id"]+f".{doc['fetched_at'][:10]}",
                 base_doc_id=doc["doc_id"],
                 url=doc["url"],
-                title=doc["title"],
-                text=doc["text"],
+                title=doc.get("title", ""),
+                text=doc.get("text", ""),
                 scrape_status=doc["scrape_status"],
                 fetched_at=datetime.fromisoformat(doc["fetched_at"]),
                 publish_date=doc.get("publish_date"),
@@ -344,8 +347,9 @@ class DynamicSnapshotDataset(Dataset):
 def register_dataset_by_date(base_path: Path, topic_type: str, qrels_type: str):
     datasets = []
     for date_path in sorted((base_path.absolute() / topic_type).iterdir(), key=lambda p: p.name):
-        if not date_path.is_dir():
+        if not date_path.is_dir() or date_path.name.endswith(".pklz4"):
             continue
+        
         dataset = DynamicDataset(date_path, qrels_type.lower(), tuple(reversed(datasets)))
         datasets.append(dataset)
         
@@ -370,7 +374,7 @@ def get_emerging_dates(md_dynamic_in: MetaDataset):
 
 def get_n_snapshots(queries_emerged: Dict[str, datetime], base_path: Path):
     first_date = min(queries_emerged.values())
-    available_dates = sorted([d.name for d in (base_path.absolute()).iterdir() if d.is_dir()])
+    available_dates = sorted([d.name for d in (base_path.absolute()).iterdir() if d.is_dir() and not d.name.endswith(".pklz4")])
     available_dates = [datetime.strptime(d, "%Y-%m-%d") for d in available_dates]
     last_date = max(available_dates)
     n_snapshots = (last_date - first_date).days + 1
