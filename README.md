@@ -23,7 +23,13 @@ pip install ir-datasets-longeval
 ## Usage
 
 > [!TIP]
-> [LongEval 2026](https://clef-longeval.github.io/): The new `longeval-sci-2026` test collection is now available and we included extra tags for the shared task: `longeval-sci-2026/clef-2026/sci` and `longeval-sci-2026/clef-2026/rag`.
+> [LongEval 2026 Qrels](https://clef-longeval.github.io/): The click, LLM, and human qrels for `longeval-sci-2026` are now available!
+> New tags:
+> - `longeval-sci-2026/snapshot-<num>/gpt-oss-120b`
+> - `longeval-sci-2026/snapshot-<num>/gpt-oss-20b`
+> - `longeval-sci-2026/snapshot-<num>/llama3-1-8b`
+> - `longeval-sci-2026/snapshot-<num>/qwen3-32b`
+> - `longeval-sci-2026/snapshot-3/human`
 
 
 The `ir_datasets_longeval` extension provides a `load` method that returns a LongEval `ir_dataset` that allows to load official versions of the LongEval datasets as well as modified versions that you have on your local file system:
@@ -80,13 +86,25 @@ The fourth LongEval Lab in 2026 introduced a new LongEval-Sci test collection. I
 - `longeval-sci-2026/snapshot-1`
 - `longeval-sci-2026/snapshot-1/raw`
 - `longeval-sci-2026/snapshot-1/dctr`
+- `longeval-sci-2026/snapshot-1/gpt-oss-120b`
+- `longeval-sci-2026/snapshot-1/gpt-oss-20b`
+- `longeval-sci-2026/snapshot-1/llama3-1-8b`
+- `longeval-sci-2026/snapshot-1/qwen3-32b`
 - `longeval-sci-2026/snapshot-2`
 - `longeval-sci-2026/snapshot-2/raw`
 - `longeval-sci-2026/snapshot-2/dctr`
+- `longeval-sci-2026/snapshot-2/gpt-oss-120b`
+- `longeval-sci-2026/snapshot-2/gpt-oss-20b`
+- `longeval-sci-2026/snapshot-2/llama3-1-8b`
+- `longeval-sci-2026/snapshot-2/qwen3-32b`
 - `longeval-sci-2026/snapshot-3`
 - `longeval-sci-2026/snapshot-3/raw`
 - `longeval-sci-2026/snapshot-3/dctr`
-- `longeval-sci-2026/snapshot-3/rag`   same as `longeval-sci-2026/clef-2026/rag`
+- `longeval-sci-2026/snapshot-3/gpt-oss-120b`
+- `longeval-sci-2026/snapshot-3/gpt-oss-20b`
+- `longeval-sci-2026/snapshot-3/llama3-1-8b`
+- `longeval-sci-2026/snapshot-3/qwen3-32b`
+- `longeval-sci-2026/snapshot-3/rag` (same as `longeval-sci-2026/clef-2026/rag`)
 
 
 </details>
