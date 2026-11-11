@@ -1,0 +1,30 @@
+{
+  "format": "longeval-documents",
+  "format_version": 1,
+  "snapshot": "snapshot-1",
+  "selection": {
+    "rules": {
+      "require": {},
+      "min": {},
+      "exclude": {}
+    },
+    "published_before": null,
+    "selected": 180,
+    "steps": [
+      {
+        "rule": "fetched",
+        "remaining": 180
+      }
+    ]
+  },
+  "counts": {
+    "documents": 180
+  },
+  "shards": [
+    {
+      "path": "documents_000000.jsonl.gz",
+      "records": 180,
+      "sha256": "9dcbfa1d8968e922c8f542cdf2b5876825c8f5b436d158b9b1be1d3fef3a8056"
+    }
+  ]
+}

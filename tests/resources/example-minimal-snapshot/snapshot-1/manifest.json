@@ -1,0 +1,120 @@
+{
+  "format_version": 1,
+  "snapshot": "snapshot-1",
+  "from": "2024-11-04T00:00:00+00:00",
+  "to": "2024-11-06T00:00:00+00:00",
+  "period": "P2D",
+  "selection": {
+    "click_types": [
+      "get-pdf",
+      "works"
+    ],
+    "filter": {
+      "snapshot": "snapshot-1",
+      "queries": {
+        "require": {
+          "is-boolean": [
+            "0"
+          ]
+        },
+        "min": {
+          "clicks": 1.0
+        },
+        "exclude": {}
+      },
+      "sessions": {
+        "require": {},
+        "min": {},
+        "exclude": {
+          "bot": [
+            "bot"
+          ]
+        }
+      },
+      "results": {
+        "require": {},
+        "min": {},
+        "exclude": {}
+      },
+      "interactions": {
+        "require": {},
+        "min": {},
+        "exclude": {
+          "click-delay": [
+            "late"
+          ]
+        }
+      }
+    },
+    "snapshot": {
+      "from": "2024-11-04T00:00:00+00:00",
+      "to": "2024-11-06T00:00:00+00:00"
+    },
+    "ordering": "queried_at, result_id"
+  },
+  "relevance": {
+    "scores": {
+      "path": "minimal-scores.parquet",
+      "sha256": "53f0fbe13b4328078c8bceeb15b21833bfd4c8359e323f4fd135c860ef1adf42"
+    },
+    "score_column": "score",
+    "discretizer": {
+      "type": "ThresholdDiscretizer",
+      "thresholds": [
+        0.1,
+        0.3
+      ]
+    },
+    "keep_all_queries": false
+  },
+  "counts": {
+    "queries_passing_filter": 12,
+    "queries": 12,
+    "qrels_pairs": 180,
+    "scored_pairs": 180,
+    "queries_without_positive_label": 0,
+    "documents": 180,
+    "qrels_pairs_without_document": 0
+  },
+  "documents": {
+    "id_field": "id",
+    "text_fields": [
+      "title",
+      "abstract",
+      "fullText"
+    ],
+    "path": "documents",
+    "format": "longeval-documents",
+    "format_version": 1,
+    "snapshot": "snapshot-1",
+    "selection": {
+      "rules": {
+        "require": {},
+        "min": {},
+        "exclude": {}
+      },
+      "published_before": null,
+      "selected": 180,
+      "steps": [
+        {
+          "rule": "fetched",
+          "remaining": 180
+        }
+      ]
+    },
+    "counts": {
+      "documents": 180
+    },
+    "shards": [
+      {
+        "path": "documents_000000.jsonl.gz",
+        "records": 180,
+        "sha256": "9dcbfa1d8968e922c8f542cdf2b5876825c8f5b436d158b9b1be1d3fef3a8056"
+      }
+    ]
+  },
+  "files": {
+    "qrels.trec.gz": "41036a5c83f10abba619a2c778b6dde982e6b86522f8ca5ee84ad6f86b39c14a",
+    "queries.tsv.gz": "84c503e2eb2a617d3a5ad25ae1995a43728ecdbff4433d66b40390f79cbc7325"
+  }
+}

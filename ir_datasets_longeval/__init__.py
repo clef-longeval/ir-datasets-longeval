@@ -6,9 +6,6 @@ from typing import Union
 from ir_datasets import main_cli as irds_main_cli
 from ir_datasets import registry as irds_registry
 
-from ir_datasets_longeval.datasets.dynamic_dataset import (
-    register as register_dynamic_dataset,
-)
 from ir_datasets_longeval.datasets.longeval_2023 import (
     LongEvalDataset,
 )
@@ -27,6 +24,12 @@ from ir_datasets_longeval.datasets.longeval_sci_2026 import (
 )
 from ir_datasets_longeval.datasets.longeval_web import LongEvalWebDataset
 from ir_datasets_longeval.datasets.longeval_web import register as register_longeval_web
+from ir_datasets_longeval.datasets.snapshot_collection import (
+    is_snapshot_collection,
+)
+from ir_datasets_longeval.datasets.snapshot_collection import (
+    register as register_snapshot_collection,
+)
 
 
 def read_property_from_metadata(base_path, property):
@@ -58,6 +61,11 @@ def load(longeval_ir_dataset: Union[str, Path]):
     if longeval_ir_dataset is None:
         raise ValueError("Please pass either a string or a Path.")
 
+    if is_snapshot_collection(longeval_ir_dataset):
+        # Snapshot collection (docs/snapshot-format.md): registers <name>/time/… and <name>/age/…
+        return register_snapshot_collection(Path(longeval_ir_dataset))
+    longeval_ir_dataset = str(longeval_ir_dataset)
+
     if longeval_ir_dataset.startswith("longeval-sci-2026/spot-check"):
         register_spot_check_datasets_sci()
     elif longeval_ir_dataset.startswith("longeval-sci/spot-check"):
@@ -70,8 +78,6 @@ def load(longeval_ir_dataset: Union[str, Path]):
         register_longeval_web()
     elif longeval_ir_dataset.startswith("longeval-2023"):
         register_longeval_2023()
-    elif longeval_ir_dataset.startswith("dynamic-dataset"):
-        register_dynamic_dataset()
 
     exists_locally = (
         longeval_ir_dataset
@@ -125,14 +131,11 @@ def register(dataset=None) -> None:
         register_longeval_2023()
     elif dataset == "longeval-sci-2026":
         register_longeval_sci_2026()
-    elif dataset == "dynamic-dataset":
-        register_dynamic_dataset()
     else:
         register_longeval_web()
         register_longeval_sci()
         register_longeval_2023()
         register_longeval_sci_2026()
-        register_dynamic_dataset()
     
 
 
